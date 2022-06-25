@@ -71,7 +71,9 @@ public class Register extends javax.swing.JFrame {
             }
         });
 
+        btnRegister.setBackground(new java.awt.Color(0, 153, 255));
         btnRegister.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
+        btnRegister.setForeground(new java.awt.Color(255, 255, 255));
         btnRegister.setText("Register");
         btnRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRegister.addActionListener(new java.awt.event.ActionListener() {
@@ -118,7 +120,7 @@ public class Register extends javax.swing.JFrame {
             }
         });
 
-        btnBackToLogin.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
+        btnBackToLogin.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
         btnBackToLogin.setText("Back to Log In");
         btnBackToLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBackToLogin.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -178,8 +180,8 @@ public class Register extends javax.swing.JFrame {
                             .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(mainPanelLayout.createSequentialGroup()
-                                    .addComponent(btnBackToLogin)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                    .addComponent(btnBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))))

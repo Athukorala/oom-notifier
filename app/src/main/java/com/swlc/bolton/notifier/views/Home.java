@@ -84,7 +84,6 @@ public class Home extends javax.swing.JFrame {
         btnLogout = new javax.swing.JLabel();
         btnMinimize = new javax.swing.JLabel();
         separatorHrz = new javax.swing.JSeparator();
-        separatorVrt = new javax.swing.JSeparator();
         lblCopyright = new javax.swing.JLabel();
         lblDevelopedTxt = new javax.swing.JLabel();
         lblUserName1 = new javax.swing.JLabel();
@@ -131,8 +130,8 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/close_dark.png"))); // NOI18N
-        btnLogout.setToolTipText("Logout");
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/close.png"))); // NOI18N
+        btnLogout.setToolTipText("Close");
         btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -142,7 +141,7 @@ public class Home extends javax.swing.JFrame {
 
         btnMinimize.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
         btnMinimize.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btnMinimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/minimize_dark.png"))); // NOI18N
+        btnMinimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/minimise.png"))); // NOI18N
         btnMinimize.setToolTipText("Minimize");
         btnMinimize.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnMinimize.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -150,8 +149,6 @@ public class Home extends javax.swing.JFrame {
                 btnMinimizeMouseClicked(evt);
             }
         });
-
-        separatorVrt.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         lblCopyright.setFont(new java.awt.Font("URW Gothic L", 0, 11)); // NOI18N
         lblCopyright.setText("Developed by Tharindu Athukorala");
@@ -248,8 +245,6 @@ public class Home extends javax.swing.JFrame {
                                 .addComponent(btnDeactivate, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnMinimize)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(separatorVrt, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnLogout))
                             .addComponent(lblUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -289,17 +284,14 @@ public class Home extends javax.swing.JFrame {
                             .addComponent(lblSWLCImg, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblBolImg, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnLogout)
-                                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(btnDeactivate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE))))
-                            .addComponent(separatorVrt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLogout)
+                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(btnDeactivate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE))
+                            .addComponent(btnMinimize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                         .addComponent(lblUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(separatorHrz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -374,7 +366,7 @@ public class Home extends javax.swing.JFrame {
 
         
         JPanel container = new JPanel(new GridLayout(0, 1)); // 1 column variable
-         for (int i = 0; i < 45; i++) {
+         for (int i = 0; i < 8; i++) {
             JPanel subPanel = new JPanel();
             subPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -482,7 +474,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel postPanel;
     private javax.swing.JSeparator separatorHrz;
-    private javax.swing.JSeparator separatorVrt;
     private javax.swing.JScrollPane spFriends;
     private javax.swing.JScrollPane spPostedContent;
     private javax.swing.JLabel txtDate;
