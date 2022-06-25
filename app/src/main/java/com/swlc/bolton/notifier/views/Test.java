@@ -112,6 +112,12 @@ public class Test extends javax.swing.JFrame {
         lblPublished = new javax.swing.JLabel();
         sep = new javax.swing.JSeparator();
         txtPane = new javax.swing.JTextPane();
+        userWrapperl = new javax.swing.JPanel();
+        lblRegUser = new javax.swing.JLabel();
+        sep2 = new javax.swing.JSeparator();
+        btnSubscribe = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        btnSubscribe1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -170,6 +176,78 @@ public class Test extends javax.swing.JFrame {
                 .addComponent(sep, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        userWrapperl.setBackground(new java.awt.Color(255, 255, 255));
+
+        lblRegUser.setBackground(new java.awt.Color(255, 255, 255));
+        lblRegUser.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
+        lblRegUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblRegUser.setText("Text 2");
+        lblRegUser.setToolTipText("Text");
+
+        btnSubscribe.setBackground(new java.awt.Color(255, 0, 0));
+        btnSubscribe.setFont(new java.awt.Font("URW Gothic L", 1, 13)); // NOI18N
+        btnSubscribe.setForeground(new java.awt.Color(255, 255, 255));
+        btnSubscribe.setText("Subscribe");
+        btnSubscribe.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnSubscribe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSubscribe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubscribeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout userWrapperlLayout = new javax.swing.GroupLayout(userWrapperl);
+        userWrapperl.setLayout(userWrapperlLayout);
+        userWrapperlLayout.setHorizontalGroup(
+            userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sep2)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(userWrapperlLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        userWrapperlLayout.setVerticalGroup(
+            userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(sep2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        btnSubscribe1.setBackground(new java.awt.Color(102, 102, 102));
+        btnSubscribe1.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
+        btnSubscribe1.setForeground(new java.awt.Color(255, 255, 255));
+        btnSubscribe1.setText("Subscribe");
+        btnSubscribe1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubscribe1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(btnSubscribe1, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                .addGap(91, 91, 91))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(btnSubscribe1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(106, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -180,8 +258,11 @@ public class Test extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(subPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(subPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(userWrapperl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,9 +271,12 @@ public class Test extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(subPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(userWrapperl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(80, 80, 80))))
@@ -200,6 +284,14 @@ public class Test extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSubscribeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubscribeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSubscribeActionPerformed
+
+    private void btnSubscribe1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubscribe1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSubscribe1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -237,12 +329,18 @@ public class Test extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSubscribe;
+    private javax.swing.JButton btnSubscribe1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblPublished;
+    private javax.swing.JLabel lblRegUser;
     private javax.swing.JSeparator sep;
+    private javax.swing.JSeparator sep2;
     private javax.swing.JScrollPane sp;
     private javax.swing.JPanel subPanel;
     private javax.swing.JTextPane txtPane;
+    private javax.swing.JPanel userWrapperl;
     // End of variables declaration//GEN-END:variables
 }

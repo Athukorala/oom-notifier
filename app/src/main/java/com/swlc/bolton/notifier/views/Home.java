@@ -11,11 +11,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
@@ -31,7 +33,6 @@ public class Home extends javax.swing.JFrame {
     // for draggable
     int xMouse;
     int yMouse;
-    int timeRun = 0;
 
     /**
      * Creates new form Home
@@ -44,6 +45,12 @@ public class Home extends javax.swing.JFrame {
         
         // underline deactivate button text
         btnDeactivate.setText("<html><u>Deactivate</u></html>");
+        
+        // retrieve all posted contents
+        loadPostedContents();
+        
+        // retrieve all users (subscribe users & un-subsribe users)
+        getAllActiveUsers();
     }
     
     private void draggableWindow(MouseEvent evt) {
@@ -67,7 +74,121 @@ public class Home extends javax.swing.JFrame {
         tTimer.start();
     }
     
+    private void loadPostedContents() {
+        JPanel container = new JPanel(new GridLayout(0, 1)); // 1 column variable
+         for (int i = 0; i < 8; i++) {
+            JPanel subPanel = new JPanel();
+            subPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+            JSeparator sep = new JSeparator();
+
+            JTextPane txtPane = new JTextPane();
+            txtPane.setEditable(false);
+            txtPane.setBackground(new java.awt.Color(255, 255, 255));
+            txtPane.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
+
+            JLabel lblPublished = new JLabel();
+            lblPublished.setBackground(new java.awt.Color(255, 255, 255));
+            lblPublished.setFont(new java.awt.Font("URW Gothic L", 0, 13)); // NOI18N
+            lblPublished.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        
+            txtPane.setText("Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
+            lblPublished.setText("- Posted by Tharindu Athukorala on June 31, 2022");
+            
+            // ----
+            javax.swing.GroupLayout subPanelLayout = new javax.swing.GroupLayout(subPanel);
+            subPanel.setLayout(subPanelLayout);
+            subPanelLayout.setHorizontalGroup(
+                subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(subPanelLayout.createSequentialGroup()
+                    .addGroup(subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(subPanelLayout.createSequentialGroup()
+                            .addGap(8, 8, 8)
+                            .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                        .addGroup(subPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(lblPublished, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap())
+                .addComponent(sep)
+            );
+            subPanelLayout.setVerticalGroup(
+                subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subPanelLayout.createSequentialGroup()
+                    .addGap(20, 20, 20)
+                    .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(lblPublished, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(20, 20, 20)
+                    .addComponent(sep, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
+            );
+            //        ---------
+             container.add(subPanel);
+      }
+      spPostedContent.setViewportView(container);
+    }
     
+    private void getAllActiveUsers(){
+        
+        ArrayList<ActiveUserDTO> activeUsers = new ArrayList();
+        activeUsers.add(new ActiveUserDTO("Kisandu Vidujaya Athukorala", false));
+        activeUsers.add(new ActiveUserDTO("Akram Sheshad", false));
+        activeUsers.add(new ActiveUserDTO("Mohan Jayalal", true));
+        activeUsers.add(new ActiveUserDTO("Kamal Perea", false));
+        
+        JPanel container1 = new JPanel(new GridLayout(0, 1)); // 1 column variable
+        
+         for (int i = 0; i < activeUsers.size(); i++) {
+            ActiveUserDTO activeUser = activeUsers.get(i);
+            JPanel userWrapperl = new JPanel();
+            userWrapperl.setBackground(new java.awt.Color(255, 255, 255));
+
+            JSeparator sep2 = new JSeparator();
+
+            JLabel lblRegUser = new JLabel();
+            lblRegUser.setBackground(new java.awt.Color(255, 255, 255));
+            lblRegUser.setFont(new java.awt.Font("URW Gothic L", 0, 13)); // NOI18N
+            lblRegUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+            lblRegUser.setToolTipText(activeUser.getName());
+            lblRegUser.setText(activeUser.getName());
+        
+            JButton btnSubscribe = new JButton();
+            btnSubscribe.setBackground(activeUser.isIsSubscribe() ? new java.awt.Color(102, 102, 102):new java.awt.Color(255, 0, 0));
+            btnSubscribe.setFont(new java.awt.Font("URW Gothic L", 1, 13)); // NOI18N
+            btnSubscribe.setForeground(new java.awt.Color(255, 255, 255));
+            btnSubscribe.setText(activeUser.isIsSubscribe() ? "Unsubscribe":"Subscribe");
+            btnSubscribe.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            btnSubscribe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            
+            // ----
+            javax.swing.GroupLayout userWrapperlLayout = new javax.swing.GroupLayout(userWrapperl);
+            userWrapperl.setLayout(userWrapperlLayout);
+            userWrapperlLayout.setHorizontalGroup(
+                userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(sep2)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
+                .addGroup(userWrapperlLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            );
+            userWrapperlLayout.setVerticalGroup(
+                userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
+                    .addContainerGap(15, Short.MAX_VALUE)
+                    .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(3, 3, 3)
+                    .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(sep2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
+            );
+            //        ---------
+             container1.add(userWrapperl);
+      }
+      spFriends.setViewportView(container1);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -169,7 +290,7 @@ public class Home extends javax.swing.JFrame {
         lblPost.setText("Posted Contents");
 
         lblFriends.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
-        lblFriends.setText("Subscribe or Un-subscribe Friends");
+        lblFriends.setText("Subscribe/ Unsubscribe Friends");
 
         btnPost.setBackground(new java.awt.Color(0, 153, 255));
         btnPost.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
@@ -197,12 +318,15 @@ public class Home extends javax.swing.JFrame {
         postPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         spPostedContent.setBackground(new java.awt.Color(255, 255, 255));
+        spPostedContent.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         javax.swing.GroupLayout postPanelLayout = new javax.swing.GroupLayout(postPanel);
         postPanel.setLayout(postPanelLayout);
         postPanelLayout.setHorizontalGroup(
             postPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spPostedContent)
+            .addGroup(postPanelLayout.createSequentialGroup()
+                .addComponent(spPostedContent, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         postPanelLayout.setVerticalGroup(
             postPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,17 +336,18 @@ public class Home extends javax.swing.JFrame {
         friendPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         spFriends.setBackground(new java.awt.Color(255, 255, 255));
-        spFriends.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         javax.swing.GroupLayout friendPanelLayout = new javax.swing.GroupLayout(friendPanel);
         friendPanel.setLayout(friendPanelLayout);
         friendPanelLayout.setHorizontalGroup(
             friendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spFriends)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, friendPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(spFriends, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         friendPanelLayout.setVerticalGroup(
             friendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spFriends, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(spFriends, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -266,12 +391,14 @@ public class Home extends javax.swing.JFrame {
                                 .addComponent(postPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblFriends, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(lblCopyright)
                                 .addGap(9, 9, 9))
-                            .addComponent(friendPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(friendPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblFriends, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -302,13 +429,9 @@ public class Home extends javax.swing.JFrame {
                         .addComponent(lblPost, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnPost, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(3, 3, 3)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(postPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(friendPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(postPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(friendPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCopyright, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -363,8 +486,6 @@ public class Home extends javax.swing.JFrame {
 
     private void btnPostMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPostMouseClicked
 
-
-        
         JPanel container = new JPanel(new GridLayout(0, 1)); // 1 column variable
          for (int i = 0; i < 8; i++) {
             JPanel subPanel = new JPanel();
@@ -387,39 +508,34 @@ public class Home extends javax.swing.JFrame {
             
             // ----
             javax.swing.GroupLayout subPanelLayout = new javax.swing.GroupLayout(subPanel);
-        subPanel.setLayout(subPanelLayout);
-        subPanelLayout.setHorizontalGroup(
-            subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelLayout.createSequentialGroup()
-                .addGroup(subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(subPanelLayout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
-                    .addGroup(subPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblPublished, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addComponent(sep)
-        );
-        subPanelLayout.setVerticalGroup(
-            subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subPanelLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblPublished, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(sep, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+            subPanel.setLayout(subPanelLayout);
+            subPanelLayout.setHorizontalGroup(
+                subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(subPanelLayout.createSequentialGroup()
+                    .addGroup(subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(subPanelLayout.createSequentialGroup()
+                            .addGap(8, 8, 8)
+                            .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                        .addGroup(subPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(lblPublished, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap())
+                .addComponent(sep)
+            );
+            subPanelLayout.setVerticalGroup(
+                subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subPanelLayout.createSequentialGroup()
+                    .addGap(20, 20, 20)
+                    .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(lblPublished, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(20, 20, 20)
+                    .addComponent(sep, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
+            );
             //        ---------
-
              container.add(subPanel);
       }
-         
-
-    spPostedContent.setViewportView(container);
-    spPostedContent.getViewport().getView().setBackground(Color.BLUE);
-    spPostedContent.getViewport().getView().setForeground(Color.YELLOW);
+      spPostedContent.setViewportView(container);
         
     }//GEN-LAST:event_btnPostMouseClicked
 
