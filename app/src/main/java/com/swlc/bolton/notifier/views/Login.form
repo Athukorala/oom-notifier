@@ -211,14 +211,14 @@
         <Component class="javax.swing.JLabel" name="lblBolImg">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/icons/logos/bolton-logo.png"/>
+              <Image iconType="3" name="/icons/logos/bolton_logo.png"/>
             </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblSWLCImg">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/icons/logos/swlc-logo.png"/>
+              <Image iconType="3" name="/icons/logos/swlc_logo.png"/>
             </Property>
           </Properties>
         </Component>

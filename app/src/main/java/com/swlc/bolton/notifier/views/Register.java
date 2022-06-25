@@ -80,13 +80,13 @@ public class Register extends javax.swing.JFrame {
             }
         });
 
-        lblSWLCImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logos/swlc-logo.png"))); // NOI18N
+        lblSWLCImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logos/swlc_logo.png"))); // NOI18N
 
         lblTitle.setFont(new java.awt.Font("URW Gothic L", 1, 24)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblTitle.setText("Create Account");
 
-        lblBolImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logos/bolton-logo.png"))); // NOI18N
+        lblBolImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logos/bolton_logo.png"))); // NOI18N
 
         txtEmail.setFont(new java.awt.Font("Umpush", 0, 14)); // NOI18N
         txtEmail.addActionListener(new java.awt.event.ActionListener() {

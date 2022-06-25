@@ -122,9 +122,9 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        lblBolImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logos/bolton-logo.png"))); // NOI18N
+        lblBolImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logos/bolton_logo.png"))); // NOI18N
 
-        lblSWLCImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logos/swlc-logo.png"))); // NOI18N
+        lblSWLCImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/logos/swlc_logo.png"))); // NOI18N
 
         topPanel.setBackground(new java.awt.Color(255, 255, 255));
 
