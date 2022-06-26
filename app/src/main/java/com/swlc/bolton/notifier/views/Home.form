@@ -81,7 +81,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnLogout" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="lblUserName1" min="-2" pref="417" max="-2" attributes="0"/>
+                              <Component id="lblUserName" min="-2" pref="417" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="4" max="32767" attributes="0"/>
                       </Group>
@@ -114,10 +114,7 @@
                                   <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                               </Group>
                               <Component id="friendPanel" max="32767" attributes="0"/>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="lblFriends" min="-2" pref="222" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="lblFriends" alignment="1" min="-2" pref="222" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -147,7 +144,7 @@
                               <Component id="btnMinimize" alignment="1" min="-2" pref="29" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="8" max="32767" attributes="0"/>
-                          <Component id="lblUserName1" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="lblUserName" min="-2" pref="32" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -252,7 +249,7 @@
             <Property name="text" type="java.lang.String" value="Notifier &#xa9; 2022"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblUserName1">
+        <Component class="javax.swing.JLabel" name="lblUserName">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="URW Gothic L" size="14" style="1"/>

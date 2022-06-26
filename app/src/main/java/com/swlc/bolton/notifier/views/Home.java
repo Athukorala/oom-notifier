@@ -207,7 +207,7 @@ public class Home extends javax.swing.JFrame {
         separatorHrz = new javax.swing.JSeparator();
         lblCopyright = new javax.swing.JLabel();
         lblDevelopedTxt = new javax.swing.JLabel();
-        lblUserName1 = new javax.swing.JLabel();
+        lblUserName = new javax.swing.JLabel();
         txtDate = new javax.swing.JLabel();
         lblPost = new javax.swing.JLabel();
         lblFriends = new javax.swing.JLabel();
@@ -277,9 +277,9 @@ public class Home extends javax.swing.JFrame {
         lblDevelopedTxt.setFont(new java.awt.Font("URW Gothic L", 0, 12)); // NOI18N
         lblDevelopedTxt.setText("Notifier © 2022");
 
-        lblUserName1.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
-        lblUserName1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblUserName1.setText("Tharindu Dananjaya");
+        lblUserName.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
+        lblUserName.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblUserName.setText("Tharindu Dananjaya");
 
         txtDate.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
         txtDate.setForeground(new java.awt.Color(153, 153, 153));
@@ -372,7 +372,7 @@ public class Home extends javax.swing.JFrame {
                                 .addComponent(btnMinimize)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnLogout))
-                            .addComponent(lblUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 4, Short.MAX_VALUE))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,9 +396,7 @@ public class Home extends javax.swing.JFrame {
                                 .addComponent(lblCopyright)
                                 .addGap(9, 9, 9))
                             .addComponent(friendPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblFriends, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(lblFriends, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -419,7 +417,7 @@ public class Home extends javax.swing.JFrame {
                                 .addComponent(txtDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE))
                             .addComponent(btnMinimize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                        .addComponent(lblUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(separatorHrz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
@@ -485,58 +483,8 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMinimizeMouseClicked
 
     private void btnPostMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPostMouseClicked
-
-        JPanel container = new JPanel(new GridLayout(0, 1)); // 1 column variable
-         for (int i = 0; i < 8; i++) {
-            JPanel subPanel = new JPanel();
-            subPanel.setBackground(new java.awt.Color(255, 255, 255));
-
-            JSeparator sep = new JSeparator();
-
-            JTextPane txtPane = new JTextPane();
-            txtPane.setEditable(false);
-            txtPane.setBackground(new java.awt.Color(255, 255, 255));
-            txtPane.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
-
-            JLabel lblPublished = new JLabel();
-            lblPublished.setBackground(new java.awt.Color(255, 255, 255));
-            lblPublished.setFont(new java.awt.Font("URW Gothic L", 0, 13)); // NOI18N
-            lblPublished.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        
-            txtPane.setText("Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
-            lblPublished.setText("- Posted by Tharindu Athukorala on June 31, 2022");
-            
-            // ----
-            javax.swing.GroupLayout subPanelLayout = new javax.swing.GroupLayout(subPanel);
-            subPanel.setLayout(subPanelLayout);
-            subPanelLayout.setHorizontalGroup(
-                subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(subPanelLayout.createSequentialGroup()
-                    .addGroup(subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(subPanelLayout.createSequentialGroup()
-                            .addGap(8, 8, 8)
-                            .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
-                        .addGroup(subPanelLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(lblPublished, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addContainerGap())
-                .addComponent(sep)
-            );
-            subPanelLayout.setVerticalGroup(
-                subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subPanelLayout.createSequentialGroup()
-                    .addGap(20, 20, 20)
-                    .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(lblPublished, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(20, 20, 20)
-                    .addComponent(sep, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
-            );
-            //        ---------
-             container.add(subPanel);
-      }
-      spPostedContent.setViewportView(container);
-        
+        Home.this.dispose();
+        new PostContent().setVisible(true);
     }//GEN-LAST:event_btnPostMouseClicked
 
     /**
@@ -586,7 +534,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel lblFriends;
     private javax.swing.JLabel lblPost;
     private javax.swing.JLabel lblSWLCImg;
-    private javax.swing.JLabel lblUserName1;
+    private javax.swing.JLabel lblUserName;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel postPanel;
     private javax.swing.JSeparator separatorHrz;
