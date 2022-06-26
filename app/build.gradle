@@ -27,8 +27,8 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    //mainClass = 'com.swlc.bolton.notifier.views.Login'
-    mainClass = 'com.swlc.bolton.notifier.views.Home'
+    mainClass = 'com.swlc.bolton.notifier.views.Login'
+//    mainClass = 'com.swlc.bolton.notifier.views.Home'
 }
 
 tasks.named('test') {
