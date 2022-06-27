@@ -4,7 +4,14 @@
  */
 package com.swlc.bolton.notifier.views;
 
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.*;
+import com.swlc.bolton.notifier.controller.UserController;
+import com.swlc.bolton.notifier.dto.UserDTO;
+import com.swlc.bolton.notifier.enums.ValidateType;
+import com.swlc.bolton.notifier.json.CommonResponse;
+import com.swlc.bolton.notifier.util.Validator;
 import java.awt.event.MouseEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,20 +19,25 @@ import java.awt.event.MouseEvent;
  */
 public class Register extends javax.swing.JFrame {
 
+    private UserController userController;
     // for draggable
     int xMouse;
     int yMouse;
+
     /**
      * Creates new form Register
      */
     public Register() {
         initComponents();
-        setSize(438,450);
-        
+        setSize(438, 450);
+
         // underline back button text
         btnBackToLogin.setText("<html><u>Back to Login</u></html>");
+
+        userController = new UserController();
     }
-     private void draggableWindow(MouseEvent evt) {
+
+    private void draggableWindow(MouseEvent evt) {
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
@@ -76,6 +88,11 @@ public class Register extends javax.swing.JFrame {
         btnRegister.setForeground(new java.awt.Color(255, 255, 255));
         btnRegister.setText("Register");
         btnRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRegister.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnRegisterMouseClicked(evt);
+            }
+        });
         btnRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegisterActionPerformed(evt);
@@ -239,9 +256,7 @@ public class Register extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNameActionPerformed
 
     private void btnBackToLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackToLoginMouseClicked
-        Register.this.dispose();
-        Login loginForm = new Login();
-        loginForm.setVisible(true);  
+        backToLoginHandler();
     }//GEN-LAST:event_btnBackToLoginMouseClicked
 
     private void btnMinimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMinimizeMouseClicked
@@ -256,6 +271,35 @@ public class Register extends javax.swing.JFrame {
         xMouse = evt.getX();
         yMouse = evt.getY();
     }//GEN-LAST:event_mainPanelMouseMoved
+
+    private void btnRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegisterMouseClicked
+        String name = txtName.getText();
+        String email = txtEmail.getText();
+        String password = txtPassword.getText();
+
+        if (!name.trim().equals("") && !email.trim().equals("") && !password.equals("")) {
+            if (!Validator.regexHandler(email.trim(), ValidateType.EMAIL)) {
+                JOptionPane.showMessageDialog(Register.this, WARN_EMAIL_TXT);
+                return;
+            }
+            if (!Validator.regexHandler(password, ValidateType.PASSWORD)) {
+                JOptionPane.showMessageDialog(Register.this, WARN_PASSWORD_TXT);
+                return;
+            }
+            
+            //            
+            CommonResponse regResponse = userController.registerHandler(new UserDTO(name.trim(), email.trim(), password));
+
+            if (regResponse.isSuccess()) {
+                backToLoginHandler();
+            } else {
+                JOptionPane.showMessageDialog(Register.this, regResponse.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(Register.this, WARN_ALL_INPUT_REQ);
+        }
+
+    }//GEN-LAST:event_btnRegisterMouseClicked
 
     /**
      * @param args the command line arguments
@@ -290,6 +334,12 @@ public class Register extends javax.swing.JFrame {
                 new Register().setVisible(true);
             }
         });
+    }
+
+    private void backToLoginHandler() {
+        Register.this.dispose();
+        Login loginForm = new Login();
+        loginForm.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

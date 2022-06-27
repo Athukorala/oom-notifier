@@ -3,28 +3,43 @@
  */
 package com.swlc.bolton.notifier;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class App {
+
     public String getGreeting() {
         return "Hello World!";
     }
 
     public static void main(String[] args) {
-    Connection conn = null;
-try {
-    conn = DriverManager.getConnection("jdbc:mysql://localhost/oom_notifier?" +
-                                   "user=athukorala&password=athukoralaAdmin@123");
-    System.out.println("conn:"+conn);
-      
+        Connection conn = null;
+        try {
+            Properties dpProperties = new Properties();
+            File dbFile = new File("settings/application.properties");
+            FileReader dbFileReader = new FileReader(dbFile);
+            dpProperties.load(dbFileReader);
 
-} catch (SQLException ex) {
-    // handle any errors
-    System.out.println("SQLException: " + ex.getMessage());
-    System.out.println("SQLState: " + ex.getSQLState());
-    System.out.println("VendorError: " + ex.getErrorCode());
-}
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://" + dpProperties.getProperty("db.ip") + "/" + dpProperties.getProperty("db.name"), (String) dpProperties.getProperty("db..user"), (String) dpProperties.getProperty("db.password"));
+
+        } catch (SQLException ex) {
+            // handle any errors
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

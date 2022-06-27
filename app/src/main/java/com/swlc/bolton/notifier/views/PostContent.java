@@ -4,6 +4,9 @@
  */
 package com.swlc.bolton.notifier.views;
 
+import com.swlc.bolton.notifier.dto.UserDTO;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -11,7 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 /**
  *
@@ -22,26 +27,44 @@ public class PostContent extends javax.swing.JFrame {
     // for draggable
     int xMouse;
     int yMouse;
-    
+
+    //
+    private UserDTO loggedUserObj;
+
     /**
      * Creates new form PostContent
      */
     public PostContent() {
         initComponents();
-        setLocationRelativeTo(null);
-        setSize(750,600);
+        setSize(750, 600);
         showTime();
-        
+    }
+
+    public PostContent(UserDTO userDTO) {
+        this.loggedUserObj = userDTO;
+        initComponents();
+        setLocationRelativeTo(null);
+        setSize(750, 600);
+        showTime();
+
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width, 0);
+//        setLocationRelativeTo(null);
+//        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+//        this.setLocation(dim.width, dim.height / 2 - this.getSize().height / 2);
+
+        // session details
+        setSessionDetails();
         // underline back button text
         btnBackToHome.setText("<html><u>Back to Home</u></html>");
     }
-    
+
     private void draggableWindow(MouseEvent evt) {
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
     }
-    
+
     private void showTime() {
         Timer tTimer = new Timer(100, new ActionListener() {
             @Override
@@ -259,9 +282,9 @@ public class PostContent extends javax.swing.JFrame {
                         .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addComponent(separatorHrz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(btnBackToHome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(27, 27, 27)
+                .addComponent(btnBackToHome, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(54, 54, 54)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,11 +298,11 @@ public class PostContent extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 750, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -294,9 +317,12 @@ public class PostContent extends javax.swing.JFrame {
     }//GEN-LAST:event_lblBolImgMouseDragged
 
     private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
-        this.dispose();
-        System.exit(0);
-
+        int isClose = JOptionPane.showConfirmDialog(this, "Are you sure you want to Logout?", "Are you Sure?", JOptionPane.YES_NO_OPTION);
+        if (isClose == 0) {
+            this.dispose();
+        } else {
+            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        }
     }//GEN-LAST:event_btnLogoutMouseClicked
 
     private void btnMinimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMinimizeMouseClicked
@@ -321,8 +347,7 @@ public class PostContent extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPostMouseClicked
 
     private void btnBackToHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackToHomeMouseClicked
-        PostContent.this.dispose();
-        new Home().setVisible(rootPaneCheckingEnabled);
+        backToHome();
     }//GEN-LAST:event_btnBackToHomeMouseClicked
 
     /**
@@ -360,6 +385,14 @@ public class PostContent extends javax.swing.JFrame {
         });
     }
 
+    private void backToHome() {
+        PostContent.this.dispose();
+        new Home(loggedUserObj).setVisible(rootPaneCheckingEnabled);
+    }
+
+    private void setSessionDetails() {
+        lblUserName.setText(loggedUserObj.getName());
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnBackToHome;
     private javax.swing.JLabel btnLogout;

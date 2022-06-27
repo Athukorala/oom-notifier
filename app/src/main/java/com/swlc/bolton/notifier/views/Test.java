@@ -31,31 +31,28 @@ public class Test extends javax.swing.JFrame {
      */
     public Test() {
         initComponents();
-        
+
         txtPane.setText("Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley ");
-        
-        
+
 //      scrollPane.setViewportBorder(null);
 //      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-      JPanel container = new JPanel(new GridLayout(0, 1)); // 1 column variable
+        JPanel container = new JPanel(new GridLayout(0, 1)); // 1 column variable
 //       JPanel container = new JPanel(); // 1 column variable
-                                                           // number of rows
-      for (int i = 0; i < 15; i++) {
+        // number of rows
+        for (int i = 0; i < 15; i++) {
 //         SingleClientPanel x = new SingleClientPanel(String.valueOf(i + 1));
-         JPanel wrap = new JPanel();
-         wrap.setSize(438,450);
-         wrap.setBorder(BorderFactory.createTitledBorder("Single Client"));
-         wrap.setLayout(new GridBagLayout());
-           wrap.add(new JLabel("Panel: " + String.valueOf(i + 1), SwingConstants.CENTER));
-         // x.setLocation(0, 45 *i);
-         container.add(wrap);
-      }
-      sp.setViewportView(container);
+            JPanel wrap = new JPanel();
+            wrap.setSize(438, 450);
+            wrap.setBorder(BorderFactory.createTitledBorder("Single Client"));
+            wrap.setLayout(new GridBagLayout());
+            wrap.add(new JLabel("Panel: " + String.valueOf(i + 1), SwingConstants.CENTER));
+            // x.setLocation(0, 45 *i);
+            container.add(wrap);
+        }
+        sp.setViewportView(container);
 
 //      setLayout(new BorderLayout());
 //      add(sp);
-             
 ////                JScrollPane scroll = new JScrollPane();
 ////                Container contentPane = layout.getContentPane();
 //
@@ -91,9 +88,6 @@ public class Test extends javax.swing.JFrame {
 ////                contentPane.add(scroll);
 ////                contentPane.add(buttonPanel,BorderLayout.SOUTH);
 //                //mainWindow.add(contentPane);
-
-
-
     }
 
     /**

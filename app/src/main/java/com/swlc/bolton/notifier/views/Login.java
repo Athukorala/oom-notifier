@@ -4,7 +4,18 @@
  */
 package com.swlc.bolton.notifier.views;
 
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.ENTERED_EMAIL_OR_PASSWORD_INVALID;
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_ALL_INPUT_REQ;
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_EMAIL_TXT;
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_PASSWORD_TXT;
+import com.swlc.bolton.notifier.controller.UserController;
+import com.swlc.bolton.notifier.data_store.UserStore;
+import com.swlc.bolton.notifier.dto.UserDTO;
+import com.swlc.bolton.notifier.enums.ValidateType;
+import com.swlc.bolton.notifier.json.CommonResponse;
+import com.swlc.bolton.notifier.util.Validator;
 import java.awt.event.MouseEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,19 +23,29 @@ import java.awt.event.MouseEvent;
  */
 public class Login extends javax.swing.JFrame {
 
+    private UserController userController;
     // for draggable
     int xMouse;
     int yMouse;
+
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
-        setSize(438,450);
-        
+        setSize(438, 450);
+
         // underline register button text
         btnRegister.setText("<html>New user? <u>Register now</u></html>");
+
+        userController = new UserController();
+
+        if (UserStore.isDevVersion) {
+            // sample data
+            sampleDataHandler();
+        }
     }
+
     private void draggableWindow(MouseEvent evt) {
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
@@ -249,8 +270,26 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
-        Home homeForm = new Home();
-        homeForm.setVisible(true);
+        String email = txtEmail.getText();
+        String password = txtPassword.getText();
+
+        if (!email.trim().equals("") && !password.equals("")) {
+            if (!Validator.regexHandler(email.trim(), ValidateType.EMAIL)) {
+                JOptionPane.showMessageDialog(this, WARN_EMAIL_TXT);
+                return;
+            }
+
+            //            
+            CommonResponse loginResponse = userController.loginHandler(new UserDTO(email.trim(), password));
+
+            if (loginResponse.isSuccess()) {
+                openHomeScreenHandler((UserDTO) loginResponse.getBody());
+            } else {
+                JOptionPane.showMessageDialog(this, ENTERED_EMAIL_OR_PASSWORD_INVALID);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, WARN_ALL_INPUT_REQ);
+        }
     }//GEN-LAST:event_btnLoginMouseClicked
 
     private void mainPanelMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainPanelMouseMoved
@@ -263,7 +302,12 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_mainPanelMouseDragged
 
     private void btnCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseClicked
-        System.exit(0);
+        int isClose = JOptionPane.showConfirmDialog(this, "Are you sure you want to close this session?", "Are you Sure?", JOptionPane.YES_NO_OPTION);
+        if (isClose == 0) {
+            System.exit(0);
+        } else {
+            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        }
     }//GEN-LAST:event_btnCloseMouseClicked
 
     private void btnMinimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMinimizeMouseClicked
@@ -308,6 +352,24 @@ public class Login extends javax.swing.JFrame {
                 new Login().setVisible(true);
             }
         });
+    }
+
+    private void openHomeScreenHandler(UserDTO userDto) {
+        if (!UserStore.isDevVersion) {
+            txtEmail.setText("");
+            txtPassword.setText("");
+        }
+        new Home(userDto).setVisible(true);
+    }
+
+    // for testing purposes
+    private void sampleDataHandler() {
+        txtEmail.setText("suba@gmail.com");
+        txtPassword.setText("Admin@123");
+        userController.registerHandler(new UserDTO("Tharindu Athukorala", "tharindu@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO("Vinod Perera", "vino@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO("Kamal Perera", "kamal@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO("Subhani Vindya", "suba@gmail.com", "Admin@123"));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
