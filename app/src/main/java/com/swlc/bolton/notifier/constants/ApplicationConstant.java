@@ -7,6 +7,7 @@ public class ApplicationConstant {
     public static final String WARN_PASSWORD_TXT = "Password must contain at least 8 characters, including UPPER/LOWERCASE/SPECIAL_CHARACTER and NUMBERS.";
     public static final String WARN_EMAIL_TXT = "Please enter valid email. Eg: kamal@gmail.com";
     public static final String WARN_ALL_INPUT_REQ = "All input values cannot be empty.";
+    public static final String WARN_POST_INPUT_REQ = "Post cannot be empty.";
     
     /**
      * API Response

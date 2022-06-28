@@ -1,4 +1,3 @@
-
 package com.swlc.bolton.notifier.data_store;
 
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.*;
@@ -6,17 +5,18 @@ import com.swlc.bolton.notifier.dto.SubscribeUserDTO;
 import com.swlc.bolton.notifier.dto.SubscriptionDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
 import com.swlc.bolton.notifier.enums.StoreType;
-import static com.swlc.bolton.notifier.enums.StoreType.*;
 import com.swlc.bolton.notifier.json.CommonResponse;
+
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  *
  * @author athukorala
  */
-public class SubscriptionStore implements SuperStore<SubscriptionDTO> {
+public class SubscriptionStore implements SuperStore<SubscriptionDTO>, ChannelSubject {
+
+    private Set<ChannelObserver> setOfPostObservers;
 
     private static final ArrayList<SubscriptionDTO> subscribedList = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class SubscriptionStore implements SuperStore<SubscriptionDTO> {
     }
 
     @Override
-    public CommonResponse retriveData(SubscriptionDTO dto) {
+    public CommonResponse retrieveData(SubscriptionDTO dto) {
         return checkAvailability(dto, StoreType.RETRIEVE);
     }
 
@@ -89,5 +89,21 @@ public class SubscriptionStore implements SuperStore<SubscriptionDTO> {
         } catch (Exception e) {
             return new CommonResponse<>(false, null, e.getMessage());
         }
+    }
+
+    // observer methods
+    @Override
+    public void addObserver(ChannelObserver weatherObserver) {
+
+    }
+
+    @Override
+    public void removeObserver(ChannelObserver weatherObserver) {
+
+    }
+
+    @Override
+    public void sendNotification() {
+
     }
 }

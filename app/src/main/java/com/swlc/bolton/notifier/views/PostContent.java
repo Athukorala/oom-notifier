@@ -1,10 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.swlc.bolton.notifier.views;
 
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.ENTERED_EMAIL_OR_PASSWORD_INVALID;
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_ALL_INPUT_REQ;
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_EMAIL_TXT;
+import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_POST_INPUT_REQ;
+import com.swlc.bolton.notifier.controller.SubscriptionController;
+import com.swlc.bolton.notifier.data_store.ChannelObserver;
 import com.swlc.bolton.notifier.dto.UserDTO;
+import com.swlc.bolton.notifier.enums.ValidateType;
+import com.swlc.bolton.notifier.json.CommonResponse;
+import com.swlc.bolton.notifier.util.Validator;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -22,7 +27,7 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
  *
  * @author athukorala
  */
-public class PostContent extends javax.swing.JFrame {
+public class PostContent extends javax.swing.JFrame implements ChannelObserver {
 
     // for draggable
     int xMouse;
@@ -30,6 +35,7 @@ public class PostContent extends javax.swing.JFrame {
 
     //
     private UserDTO loggedUserObj;
+    private SubscriptionController subscriptionController;
 
     /**
      * Creates new form PostContent
@@ -53,6 +59,9 @@ public class PostContent extends javax.swing.JFrame {
 //        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 //        this.setLocation(dim.width, dim.height / 2 - this.getSize().height / 2);
 
+        // initalizing
+        subscriptionController = new SubscriptionController();
+        
         // session details
         setSessionDetails();
         // underline back button text
@@ -343,7 +352,13 @@ public class PostContent extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPostActionPerformed
 
     private void btnPostMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPostMouseClicked
-
+        String post = txtPost.getText();
+         if (post.trim().equals("")) {
+                JOptionPane.showMessageDialog(this, WARN_POST_INPUT_REQ);
+                return;
+         }
+         subscriptionController.publishPostHandler(loggedUserObj, post);
+         
     }//GEN-LAST:event_btnPostMouseClicked
 
     private void btnBackToHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackToHomeMouseClicked
@@ -413,4 +428,9 @@ public class PostContent extends javax.swing.JFrame {
     private javax.swing.JLabel txtDate;
     private javax.swing.JTextPane txtPost;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(String post) {
+        System.out.println("calll.........................");
+    }
 }

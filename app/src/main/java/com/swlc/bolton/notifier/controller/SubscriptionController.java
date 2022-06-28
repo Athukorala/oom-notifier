@@ -1,6 +1,7 @@
 
 package com.swlc.bolton.notifier.controller;
 
+import com.swlc.bolton.notifier.data_store.ChannelProvider;
 import com.swlc.bolton.notifier.data_store.SubscriptionStore;
 import com.swlc.bolton.notifier.data_store.UserStore;
 import com.swlc.bolton.notifier.dto.SubscribeUserDTO;
@@ -21,8 +22,8 @@ public class SubscriptionController {
         subscriptionStore = new SubscriptionStore();
     }
 
-    public CommonResponse retrieveAllSubcriptionHandler(UserDTO userDTO) {
-        return subscriptionStore.retriveData(new SubscriptionDTO(0, userDTO.getId()));
+    public CommonResponse retrieveAllSubscriptionHandler(UserDTO userDTO) {
+        return subscriptionStore.retrieveData(new SubscriptionDTO(0, userDTO.getId()));
     }
 
     /**
@@ -32,5 +33,10 @@ public class SubscriptionController {
      */
     public CommonResponse subscriptionUserHandler(SubscriptionDTO subscriberDTO) {
         return subscriptionStore.reserve(subscriberDTO);
+    }
+
+    public CommonResponse publishPostHandler(UserDTO user, String post) {
+        ChannelProvider channelProvider = new ChannelProvider(post);
+        return null;
     }
 }

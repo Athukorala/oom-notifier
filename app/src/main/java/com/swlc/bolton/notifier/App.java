@@ -24,22 +24,6 @@ public class App {
     }
 
     public static void main(String[] args) {
-        Connection conn = null;
-        try {
-            Properties dpProperties = new Properties();
-            File dbFile = new File("settings/application.properties");
-            FileReader dbFileReader = new FileReader(dbFile);
-            dpProperties.load(dbFileReader);
-
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://" + dpProperties.getProperty("db.ip") + "/" + dpProperties.getProperty("db.name"), (String) dpProperties.getProperty("db..user"), (String) dpProperties.getProperty("db.password"));
-
-        } catch (SQLException ex) {
-            // handle any errors
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 }

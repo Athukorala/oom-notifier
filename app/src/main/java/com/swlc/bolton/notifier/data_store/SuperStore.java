@@ -14,6 +14,6 @@ public interface SuperStore <T extends SuperDTO> {
     public CommonResponse reserve(T dto) throws Exception;
     public CommonResponse release(T dto) throws Exception;
     public CommonResponse retireveListHandler() throws Exception;
-    public CommonResponse retriveData(T dto) throws Exception;
+    public CommonResponse retrieveData(T dto) throws Exception;
     public CommonResponse checkAvailability(T dto, StoreType store) throws Exception;
 }

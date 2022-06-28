@@ -24,7 +24,7 @@ public class UserController {
     }
     
     public CommonResponse loginHandler(UserDTO userDTO) {
-        CommonResponse checkAvailability = userStore.retriveData(userDTO);
+        CommonResponse checkAvailability = userStore.retrieveData(userDTO);
         
         if(checkAvailability.isSuccess()) {
             UserDTO retriveUserObj = (UserDTO) checkAvailability.getBody();

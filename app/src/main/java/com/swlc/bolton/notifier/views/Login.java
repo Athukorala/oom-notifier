@@ -1,21 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.swlc.bolton.notifier.views;
 
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.ENTERED_EMAIL_OR_PASSWORD_INVALID;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_ALL_INPUT_REQ;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_EMAIL_TXT;
-import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_PASSWORD_TXT;
 import com.swlc.bolton.notifier.controller.SubscriptionController;
 import com.swlc.bolton.notifier.controller.UserController;
+import com.swlc.bolton.notifier.data_store.ChannelProvider;
 import com.swlc.bolton.notifier.data_store.UserStore;
 import com.swlc.bolton.notifier.dto.UserDTO;
 import com.swlc.bolton.notifier.enums.ValidateType;
 import com.swlc.bolton.notifier.json.CommonResponse;
 import com.swlc.bolton.notifier.util.Validator;
 import java.awt.event.MouseEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,6 +23,7 @@ import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
 
     private UserController userController;
+    private ChannelProvider channelProvider;
     // for draggable
     private int xMouse;
     private int yMouse;
@@ -41,6 +40,7 @@ public class Login extends javax.swing.JFrame {
 
         // initalizing
         userController = new UserController();
+        channelProvider = new ChannelProvider();
 
         // sample data
         if (UserStore.isDevVersion) {
@@ -361,19 +361,28 @@ public class Login extends javax.swing.JFrame {
             txtEmail.setText("");
             txtPassword.setText("");
         }
-        new Home(userDto).setVisible(true);
+        Home home = new Home(userDto);
+
+        channelProvider.addObserver(home);
+
+        home.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                channelProvider.setPost("Abc...");
+            }
+        }, 300L);
     }
 
     // for testing purposes
     private void sampleDataHandler() {
         txtEmail.setText("suba@gmail.com");
         txtPassword.setText("Admin@123");
-        userController.registerHandler(new UserDTO(10000,"Tharindu Athukorala", "tharindu@gmail.com", "Admin@123"));
-        userController.registerHandler(new UserDTO(10001,"Vinod Perera", "vino@gmail.com", "Admin@123"));
-        userController.registerHandler(new UserDTO(10002,"Kamal Perera", "kamal@gmail.com", "Admin@123"));
-        userController.registerHandler(new UserDTO(10003,"Subhani Vindya", "suba@gmail.com", "Admin@123"));
-        
-        
+        userController.registerHandler(new UserDTO(10000, "Tharindu Athukorala", "tharindu@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO(10001, "Vinod Perera", "vino@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO(10002, "Kamal Perera", "kamal@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO(10003, "Subhani Vindya", "suba@gmail.com", "Admin@123"));
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

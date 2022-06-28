@@ -33,7 +33,7 @@ public class UserStore implements SuperStore<UserDTO>{
     }
     
     @Override
-    public CommonResponse retriveData(UserDTO userDTO) {
+    public CommonResponse retrieveData(UserDTO userDTO) {
         return checkAvailability(userDTO, StoreType.RETRIEVE);
     }
 

@@ -1,18 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.swlc.bolton.notifier.views;
 
 import com.swlc.bolton.notifier.controller.SubscriptionController;
+import com.swlc.bolton.notifier.data_store.ChannelObserver;
 import com.swlc.bolton.notifier.data_store.UserStore;
 import com.swlc.bolton.notifier.dto.SubscribeUserDTO;
 import com.swlc.bolton.notifier.dto.SubscriptionDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
 import com.swlc.bolton.notifier.json.CommonResponse;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -23,14 +18,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
@@ -38,7 +31,7 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
  *
  * @author athukorala
  */
-public class Home extends javax.swing.JFrame {
+public class Home extends javax.swing.JFrame implements ChannelObserver {
 
     // for draggable
     private int xMouse;
@@ -57,6 +50,7 @@ public class Home extends javax.swing.JFrame {
     }
 
     public Home(UserDTO userDTO) {
+        System.out.println("getEmail:::::"+userDTO.getEmail());
         this.loggedUserObj = userDTO;
 
         initComponents();
@@ -512,7 +506,7 @@ public class Home extends javax.swing.JFrame {
     }
 
     public void retrieveAllSubcriptionHandler() {
-        CommonResponse resp = subscriptionController.retrieveAllSubcriptionHandler(loggedUserObj);
+        CommonResponse resp = subscriptionController.retrieveAllSubscriptionHandler(loggedUserObj);
         if (resp.isSuccess()) {
             ArrayList<SubscribeUserDTO> subscribeUsers = (ArrayList<SubscribeUserDTO>) resp.getBody();
 
@@ -540,6 +534,7 @@ public class Home extends javax.swing.JFrame {
                 btnSubscribe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
                 btnSubscribe.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
                         CommonResponse response = subscriptionController.subscriptionUserHandler(new SubscriptionDTO(obj.getUserDTO().getId(), loggedUserObj.getId()));
                         if(response.isSuccess()) retrieveAllSubcriptionHandler();
@@ -671,4 +666,10 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane spPostedContent;
     private javax.swing.JLabel txtDate;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(String post) {
+        System.out.println("reg-email: "+loggedUserObj.getEmail());
+        System.out.println("shared-post: "+post);
+    }
 }
