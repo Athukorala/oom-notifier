@@ -14,10 +14,6 @@ import java.util.logging.Logger;
  * @author athukorala
  */
 public class ConnectionFactory {
-
-    public static Object getDBConnection() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     private Connection conn;
     private static ConnectionFactory dbConnection;
 

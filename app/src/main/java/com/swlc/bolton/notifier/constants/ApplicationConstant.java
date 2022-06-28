@@ -1,7 +1,6 @@
 package com.swlc.bolton.notifier.constants;
 
 public class ApplicationConstant {
-    
      /**
      * Warnings
      */
@@ -18,7 +17,7 @@ public class ApplicationConstant {
     public static final String ADDED_EMAIL_ALREADY_EXIST = "Added email already exist.";
     public static final String USER_NOT_FOUND = "Sorry, user not found.";
     public static final String ENTERED_EMAIL_OR_PASSWORD_INVALID = "You've entered an incorrect email/password combination";
-    
+    public static final String ALREADY_SUBSCRIBED = "User already subscribed.";
 
     /**
     * Error codes

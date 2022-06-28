@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.swlc.bolton.notifier.controller;
 
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.*;
 import com.swlc.bolton.notifier.data_store.UserStore;
 import com.swlc.bolton.notifier.dto.UserDTO;
-import com.swlc.bolton.notifier.enums.UserStoreType;
+import com.swlc.bolton.notifier.enums.StoreType;
 import com.swlc.bolton.notifier.json.CommonResponse;
 
 /**
@@ -27,7 +24,7 @@ public class UserController {
     }
     
     public CommonResponse loginHandler(UserDTO userDTO) {
-        CommonResponse checkAvailability = userStore.retriveUser(userDTO);
+        CommonResponse checkAvailability = userStore.retriveData(userDTO);
         
         if(checkAvailability.isSuccess()) {
             UserDTO retriveUserObj = (UserDTO) checkAvailability.getBody();

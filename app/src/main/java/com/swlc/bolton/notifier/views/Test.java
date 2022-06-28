@@ -184,6 +184,11 @@ public class Test extends javax.swing.JFrame {
         btnSubscribe.setText("Subscribe");
         btnSubscribe.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSubscribe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSubscribe.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSubscribeMouseClicked(evt);
+            }
+        });
         btnSubscribe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSubscribeActionPerformed(evt);
@@ -286,6 +291,10 @@ public class Test extends javax.swing.JFrame {
     private void btnSubscribe1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubscribe1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSubscribe1ActionPerformed
+
+    private void btnSubscribeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSubscribeMouseClicked
+        System.out.println("something else");
+    }//GEN-LAST:event_btnSubscribeMouseClicked
 
     /**
      * @param args the command line arguments

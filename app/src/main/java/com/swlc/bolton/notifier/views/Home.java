@@ -4,9 +4,12 @@
  */
 package com.swlc.bolton.notifier.views;
 
+import com.swlc.bolton.notifier.controller.SubscriptionController;
 import com.swlc.bolton.notifier.data_store.UserStore;
-import com.swlc.bolton.notifier.dto.ActiveUserDTO;
+import com.swlc.bolton.notifier.dto.SubscribeUserDTO;
+import com.swlc.bolton.notifier.dto.SubscriptionDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
+import com.swlc.bolton.notifier.json.CommonResponse;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -38,10 +41,11 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 public class Home extends javax.swing.JFrame {
 
     // for draggable
-    int xMouse;
-    int yMouse;
+    private int xMouse;
+    private int yMouse;
     //
     private UserDTO loggedUserObj;
+    private SubscriptionController subscriptionController;
 
     /**
      * Creates new form Home
@@ -62,6 +66,17 @@ public class Home extends javax.swing.JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width, 0);
 
+        // initalizing
+        subscriptionController = new SubscriptionController();
+
+        // sample data
+        if (UserStore.isDevVersion) {
+            sampleDataHandler();
+        }
+
+        // retrieve friends (with subscription status)
+        retrieveAllSubcriptionHandler();
+
         // session details
         setSessionDetails();
 
@@ -72,8 +87,7 @@ public class Home extends javax.swing.JFrame {
         loadPostedContents();
 
         // retrieve all users (subscribe users & un-subsribe users)
-        getAllActiveUsers();
-
+//        getAllActiveUsers();
     }
 
     private void draggableWindow(MouseEvent evt) {
@@ -148,69 +162,6 @@ public class Home extends javax.swing.JFrame {
             container.add(subPanel);
         }
         spPostedContent.setViewportView(container);
-    }
-
-    private void getAllActiveUsers() {
-
-        ArrayList<ActiveUserDTO> activeUsers = new ArrayList();
-        activeUsers.add(new ActiveUserDTO("Kisandu Vidujaya Athukorala", false));
-        activeUsers.add(new ActiveUserDTO("Akram Sheshad", false));
-        activeUsers.add(new ActiveUserDTO("Mohan Jayalal", true));
-        activeUsers.add(new ActiveUserDTO("Kamal Perea", false));
-
-        JPanel container1 = new JPanel(new GridLayout(0, 1)); // 1 column variable
-
-        for (int i = 0; i < activeUsers.size(); i++) {
-            ActiveUserDTO activeUser = activeUsers.get(i);
-            JPanel userWrapperl = new JPanel();
-            userWrapperl.setBackground(new java.awt.Color(255, 255, 255));
-
-            JSeparator sep2 = new JSeparator();
-
-            JLabel lblRegUser = new JLabel();
-            lblRegUser.setBackground(new java.awt.Color(255, 255, 255));
-            lblRegUser.setFont(new java.awt.Font("URW Gothic L", 0, 13)); // NOI18N
-            lblRegUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-            lblRegUser.setToolTipText(activeUser.getName());
-            lblRegUser.setText(activeUser.getName());
-
-            JButton btnSubscribe = new JButton();
-            btnSubscribe.setBackground(activeUser.isIsSubscribe() ? new java.awt.Color(102, 102, 102) : new java.awt.Color(255, 0, 0));
-            btnSubscribe.setFont(new java.awt.Font("URW Gothic L", 1, 13)); // NOI18N
-            btnSubscribe.setForeground(new java.awt.Color(255, 255, 255));
-            btnSubscribe.setText(activeUser.isIsSubscribe() ? "Unsubscribe" : "Subscribe");
-            btnSubscribe.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-            btnSubscribe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-            // ----
-            javax.swing.GroupLayout userWrapperlLayout = new javax.swing.GroupLayout(userWrapperl);
-            userWrapperl.setLayout(userWrapperlLayout);
-            userWrapperlLayout.setHorizontalGroup(
-                    userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sep2)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
-                                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addContainerGap())
-                            .addGroup(userWrapperlLayout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            );
-            userWrapperlLayout.setVerticalGroup(
-                    userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
-                                    .addContainerGap(15, Short.MAX_VALUE)
-                                    .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(3, 3, 3)
-                                    .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(sep2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
-            );
-            //        ---------
-            container1.add(userWrapperl);
-        }
-        spFriends.setViewportView(container1);
     }
 
     private void setSessionDetails() {
@@ -558,6 +509,146 @@ public class Home extends javax.swing.JFrame {
                 new Home().setVisible(true);
             }
         });
+    }
+
+    public void retrieveAllSubcriptionHandler() {
+        CommonResponse resp = subscriptionController.retrieveAllSubcriptionHandler(loggedUserObj);
+        if (resp.isSuccess()) {
+            ArrayList<SubscribeUserDTO> subscribeUsers = (ArrayList<SubscribeUserDTO>) resp.getBody();
+
+            JPanel container1 = new JPanel(new GridLayout(0, 1)); // 1 column variable
+            subscribeUsers.forEach((SubscribeUserDTO obj) -> {
+
+                JPanel userWrapperl = new JPanel();
+                userWrapperl.setBackground(new java.awt.Color(255, 255, 255));
+
+                JSeparator sep2 = new JSeparator();
+
+                JLabel lblRegUser = new JLabel();
+                lblRegUser.setBackground(new java.awt.Color(255, 255, 255));
+                lblRegUser.setFont(new java.awt.Font("URW Gothic L", 0, 13)); // NOI18N
+                lblRegUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+                lblRegUser.setToolTipText(obj.getUserDTO().getName());
+                lblRegUser.setText(obj.getUserDTO().getName());
+
+                JButton btnSubscribe = new JButton();
+                btnSubscribe.setBackground(obj.isIsSubscribe() ? new java.awt.Color(102, 102, 102) : new java.awt.Color(255, 0, 0));
+                btnSubscribe.setFont(new java.awt.Font("URW Gothic L", 1, 13)); // NOI18N
+                btnSubscribe.setForeground(new java.awt.Color(255, 255, 255));
+                btnSubscribe.setText(obj.isIsSubscribe() ? "Unsubscribe" : "Subscribe");
+                btnSubscribe.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+                btnSubscribe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+                btnSubscribe.addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        CommonResponse response = subscriptionController.subscriptionUserHandler(new SubscriptionDTO(obj.getUserDTO().getId(), loggedUserObj.getId()));
+                        if(response.isSuccess()) retrieveAllSubcriptionHandler();
+                    }
+                });
+
+                // ---- CODED --------
+                javax.swing.GroupLayout userWrapperlLayout = new javax.swing.GroupLayout(userWrapperl);
+                userWrapperl.setLayout(userWrapperlLayout);
+                userWrapperlLayout.setHorizontalGroup(
+                        userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(sep2)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap())
+                                .addGroup(userWrapperlLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                );
+                userWrapperlLayout.setVerticalGroup(
+                        userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
+                                        .addContainerGap(15, Short.MAX_VALUE)
+                                        .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(3, 3, 3)
+                                        .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(sep2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
+                );
+                // ---- END CODED --------
+                container1.add(userWrapperl);
+            });
+            spFriends.setViewportView(container1);
+
+        }
+    }
+
+    public void sampleDataHandler() {
+
+    }
+
+    // testing
+    private void getAllActiveUsers() {
+
+        ArrayList<SubscribeUserDTO> activeUsers = new ArrayList();
+        SubscribeUserDTO subscribeUserDTO = new SubscribeUserDTO();
+        subscribeUserDTO.setName("Kisandu Vidujaya Athukorala");
+        subscribeUserDTO.setIsSubscribe(false);
+        activeUsers.add(subscribeUserDTO);
+//        
+//        activeUsers.add(new SubscribeUserDTO("Akram Sheshad", false));
+//        activeUsers.add(new SubscribeUserDTO("Mohan Jayalal", true));
+//        activeUsers.add(new SubscribeUserDTO("Kamal Perea", false));
+
+        JPanel container1 = new JPanel(new GridLayout(0, 1)); // 1 column variable
+
+        for (int i = 0; i < activeUsers.size(); i++) {
+            SubscribeUserDTO activeUser = activeUsers.get(i);
+            JPanel userWrapperl = new JPanel();
+            userWrapperl.setBackground(new java.awt.Color(255, 255, 255));
+
+            JSeparator sep2 = new JSeparator();
+
+            JLabel lblRegUser = new JLabel();
+            lblRegUser.setBackground(new java.awt.Color(255, 255, 255));
+            lblRegUser.setFont(new java.awt.Font("URW Gothic L", 0, 13)); // NOI18N
+            lblRegUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+            lblRegUser.setToolTipText(activeUser.getName());
+            lblRegUser.setText(activeUser.getName());
+
+            JButton btnSubscribe = new JButton();
+            btnSubscribe.setBackground(activeUser.isIsSubscribe() ? new java.awt.Color(102, 102, 102) : new java.awt.Color(255, 0, 0));
+            btnSubscribe.setFont(new java.awt.Font("URW Gothic L", 1, 13)); // NOI18N
+            btnSubscribe.setForeground(new java.awt.Color(255, 255, 255));
+            btnSubscribe.setText(activeUser.isIsSubscribe() ? "Unsubscribe" : "Subscribe");
+            btnSubscribe.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            btnSubscribe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+            // ----
+            javax.swing.GroupLayout userWrapperlLayout = new javax.swing.GroupLayout(userWrapperl);
+            userWrapperl.setLayout(userWrapperlLayout);
+            userWrapperlLayout.setHorizontalGroup(
+                    userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sep2)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
+                                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addContainerGap())
+                            .addGroup(userWrapperlLayout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            );
+            userWrapperlLayout.setVerticalGroup(
+                    userWrapperlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userWrapperlLayout.createSequentialGroup()
+                                    .addContainerGap(15, Short.MAX_VALUE)
+                                    .addComponent(lblRegUser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(3, 3, 3)
+                                    .addComponent(btnSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(sep2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
+            );
+            //        ---------
+            container1.add(userWrapperl);
+        }
+        spFriends.setViewportView(container1);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

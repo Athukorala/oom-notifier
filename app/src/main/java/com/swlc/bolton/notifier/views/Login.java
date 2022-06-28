@@ -8,6 +8,7 @@ import static com.swlc.bolton.notifier.constants.ApplicationConstant.ENTERED_EMA
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_ALL_INPUT_REQ;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_EMAIL_TXT;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_PASSWORD_TXT;
+import com.swlc.bolton.notifier.controller.SubscriptionController;
 import com.swlc.bolton.notifier.controller.UserController;
 import com.swlc.bolton.notifier.data_store.UserStore;
 import com.swlc.bolton.notifier.dto.UserDTO;
@@ -25,8 +26,8 @@ public class Login extends javax.swing.JFrame {
 
     private UserController userController;
     // for draggable
-    int xMouse;
-    int yMouse;
+    private int xMouse;
+    private int yMouse;
 
     /**
      * Creates new form Login
@@ -38,10 +39,11 @@ public class Login extends javax.swing.JFrame {
         // underline register button text
         btnRegister.setText("<html>New user? <u>Register now</u></html>");
 
+        // initalizing
         userController = new UserController();
 
+        // sample data
         if (UserStore.isDevVersion) {
-            // sample data
             sampleDataHandler();
         }
     }
@@ -366,10 +368,12 @@ public class Login extends javax.swing.JFrame {
     private void sampleDataHandler() {
         txtEmail.setText("suba@gmail.com");
         txtPassword.setText("Admin@123");
-        userController.registerHandler(new UserDTO("Tharindu Athukorala", "tharindu@gmail.com", "Admin@123"));
-        userController.registerHandler(new UserDTO("Vinod Perera", "vino@gmail.com", "Admin@123"));
-        userController.registerHandler(new UserDTO("Kamal Perera", "kamal@gmail.com", "Admin@123"));
-        userController.registerHandler(new UserDTO("Subhani Vindya", "suba@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO(10000,"Tharindu Athukorala", "tharindu@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO(10001,"Vinod Perera", "vino@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO(10002,"Kamal Perera", "kamal@gmail.com", "Admin@123"));
+        userController.registerHandler(new UserDTO(10003,"Subhani Vindya", "suba@gmail.com", "Admin@123"));
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

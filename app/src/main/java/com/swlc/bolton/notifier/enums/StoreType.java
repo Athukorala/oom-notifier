@@ -5,6 +5,6 @@ package com.swlc.bolton.notifier.enums;
  *
  * @author athukorala
  */
-public enum ValidateType {
-    EMAIL, PASSWORD
+public enum StoreType {
+    RELEASE, RESERVE, RETRIEVE
 }
