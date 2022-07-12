@@ -1,6 +1,8 @@
-package com.swlc.bolton.notifier.data_store;
+package com.swlc.bolton.notifier.data.store.impl;
 
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.*;
+
+import com.swlc.bolton.notifier.data.store.SuperStore;
 import com.swlc.bolton.notifier.dto.SubscribeUserDTO;
 import com.swlc.bolton.notifier.dto.SubscriptionDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
@@ -8,48 +10,56 @@ import com.swlc.bolton.notifier.enums.StoreType;
 import com.swlc.bolton.notifier.json.CommonResponse;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 /**
  *
  * @author athukorala
  */
-public class SubscriptionStore implements SuperStore<SubscriptionDTO>, ChannelSubject {
-
-    private Set<ChannelObserver> setOfPostObservers;
+public class SubscriptionStore implements SuperStore<SubscriptionDTO> {
 
     private static final ArrayList<SubscriptionDTO> subscribedList = new ArrayList<>();
 
     @Override
-    public synchronized CommonResponse reserve(SubscriptionDTO subscriberDTO) {
+    public synchronized CommonResponse<?> reserve(SubscriptionDTO subscriberDTO) {
         return checkAvailability(subscriberDTO, StoreType.RESERVE);
     }
 
     @Override
-    public CommonResponse release(SubscriptionDTO dto) throws Exception {
+    public CommonResponse<?> release(SubscriptionDTO dto) {
         return checkAvailability(dto, StoreType.RELEASE);
     }
 
     @Override
-    public CommonResponse retireveListHandler() throws Exception {
+    public CommonResponse<?> retrieveListHandler() {
         return new CommonResponse<>(true, subscribedList);
     }
 
     @Override
-    public CommonResponse retrieveData(SubscriptionDTO dto) {
+    public CommonResponse<?> retrieveData(SubscriptionDTO dto) {
         return checkAvailability(dto, StoreType.RETRIEVE);
     }
 
     @Override
-    public CommonResponse checkAvailability(SubscriptionDTO subscriberDTO, StoreType type) {
-        try {           
+    public CommonResponse<?> checkAvailability(SubscriptionDTO subscriberDTO, StoreType type) {
+        try {
             switch (type) {
+                case RELEASE:
+                    for (int i = 0; i < subscribedList.size(); i++) {
+                        SubscriptionDTO subscribedObj = subscribedList.get(i);
+                        if ((subscriberDTO.getSubscribedBy() == subscribedObj.getSubscribedBy())) {
+                            subscribedList.remove(subscribedObj);
+                        }
+                    }
+                     return new CommonResponse<>(true, subscriberDTO);
+                
                 case RESERVE:
                     SubscriptionDTO availableObj = null;
-                    for (int i = 0; i < subscribedList.size(); i++) {
-                        if ((subscriberDTO.getSubscribedBy() == subscribedList.get(i).getSubscribedBy()) && (subscriberDTO.getSubscriberUserId() == subscribedList.get(i).getSubscriberUserId())) availableObj = subscribedList.get(i);
+                    for (SubscriptionDTO subscriptionDTO : subscribedList) {
+                        if ((subscriberDTO.getSubscribedBy() == subscriptionDTO.getSubscribedBy()) && (subscriberDTO.getSubscriberUserId() == subscriptionDTO.getSubscriberUserId())) {
+                            availableObj = subscriptionDTO;
+                        }
                     }
-                    
+
                     if (availableObj == null) {
                         subscribedList.add(subscriberDTO);
                     } else {
@@ -59,18 +69,19 @@ public class SubscriptionStore implements SuperStore<SubscriptionDTO>, ChannelSu
 
                 case RETRIEVE:
                     ArrayList<SubscribeUserDTO> SubscribeUserDTO = new ArrayList<>();
-                    CommonResponse resp = new UserStore().retireveListHandler();
+                    CommonResponse<?> resp = new UserStore().retrieveListHandler();
                     ArrayList<UserDTO> userList = (ArrayList<UserDTO>) resp.getBody();
 
                     userList.forEach(userDetail -> {
-                        if (userDetail.getId() == subscriberDTO.getSubscribedBy()) return;
+                        if (userDetail.getId() == subscriberDTO.getSubscribedBy()) {
+                            return;
+                        }
                         SubscribeUserDTO tempSubscribeUser = new SubscribeUserDTO();
 
                         boolean isFound = false;
                         UserDTO tempUserOb = null;
 
-                        for (int i = 0; i < subscribedList.size(); i++) {
-                            SubscriptionDTO subscribedObj = subscribedList.get(i);
+                        for (SubscriptionDTO subscribedObj : subscribedList) {
                             if ((subscriberDTO.getSubscribedBy() == subscribedObj.getSubscribedBy()) && (subscribedObj.getSubscriberUserId() == userDetail.getId())) {
                                 isFound = true;
                                 tempUserOb = userDetail;
@@ -91,19 +102,23 @@ public class SubscriptionStore implements SuperStore<SubscriptionDTO>, ChannelSu
         }
     }
 
-    // observer methods
-    @Override
-    public void addObserver(ChannelObserver weatherObserver) {
-
+    public CommonResponse<ArrayList<Long>> getSubscribers(long userId) {
+        ArrayList<Long> subscribers = new ArrayList<>();
+        for (SubscriptionDTO subscribedObj : subscribedList) {
+            if (userId == subscribedObj.getSubscriberUserId()) {
+                subscribers.add(subscribedObj.getSubscribedBy());
+            }
+        }
+        return new CommonResponse<>(subscribers.size() > 0, subscribers);
     }
 
-    @Override
-    public void removeObserver(ChannelObserver weatherObserver) {
-
-    }
-
-    @Override
-    public void sendNotification() {
-
+    public CommonResponse<Long> getSubscriberCount(long userId) {
+        long count = 0;
+        for (SubscriptionDTO subscriptionDTO : subscribedList) {
+            if (userId == subscriptionDTO.getSubscriberUserId()) {
+                ++count;
+            }
+        }
+        return new CommonResponse<>(true, count);
     }
 }

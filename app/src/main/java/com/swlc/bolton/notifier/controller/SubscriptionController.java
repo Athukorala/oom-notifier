@@ -1,20 +1,15 @@
-
 package com.swlc.bolton.notifier.controller;
 
-import com.swlc.bolton.notifier.data_store.ChannelProvider;
-import com.swlc.bolton.notifier.data_store.SubscriptionStore;
-import com.swlc.bolton.notifier.data_store.UserStore;
-import com.swlc.bolton.notifier.dto.SubscribeUserDTO;
+import com.swlc.bolton.notifier.data.store.impl.SubscriptionStore;
 import com.swlc.bolton.notifier.dto.SubscriptionDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
 import com.swlc.bolton.notifier.json.CommonResponse;
-import java.util.ArrayList;
 
 /**
  *
  * @author athukorala
  */
-public class SubscriptionController {
+public class SubscriptionController implements SuperController {
 
     private final SubscriptionStore subscriptionStore;
 
@@ -35,8 +30,14 @@ public class SubscriptionController {
         return subscriptionStore.reserve(subscriberDTO);
     }
 
-    public CommonResponse publishPostHandler(UserDTO user, String post) {
-        ChannelProvider channelProvider = new ChannelProvider(post);
-        return null;
+    public CommonResponse getSubscribedCountHandler(long userId) {
+        return subscriptionStore.getSubscriberCount(userId);
+    }
+
+    public CommonResponse getSubscribersIDHandler(long userId) {
+        return subscriptionStore.getSubscribers(userId);
+    }
+    public CommonResponse removeSubscriptionHandler(SubscriptionDTO subscriberDTO) {
+        return subscriptionStore.release(subscriberDTO);
     }
 }

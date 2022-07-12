@@ -1,11 +1,16 @@
 package com.swlc.bolton.notifier.views;
 
+import com.swlc.bolton.notifier.controller.ControllerFactory;
 import com.swlc.bolton.notifier.controller.SubscriptionController;
-import com.swlc.bolton.notifier.data_store.ChannelObserver;
-import com.swlc.bolton.notifier.data_store.UserStore;
+import com.swlc.bolton.notifier.controller.UserController;
+import com.swlc.bolton.notifier.data.store.ChannelObserver;
+import com.swlc.bolton.notifier.data.store.impl.ChannelProvider;
+import com.swlc.bolton.notifier.dto.PostDTO;
 import com.swlc.bolton.notifier.dto.SubscribeUserDTO;
 import com.swlc.bolton.notifier.dto.SubscriptionDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
+import com.swlc.bolton.notifier.enums.ControllerTypes;
+import com.swlc.bolton.notifier.enums.ObserverType;
 import com.swlc.bolton.notifier.json.CommonResponse;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -25,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
 import javax.swing.Timer;
-import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 /**
  *
@@ -33,12 +37,18 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
  */
 public class Home extends javax.swing.JFrame implements ChannelObserver {
 
+    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
     // for draggable
-    private int xMouse;
-    private int yMouse;
-    //
+    private int xMouse = 0;
+    private int yMouse = 0;
+
     private UserDTO loggedUserObj;
     private SubscriptionController subscriptionController;
+    private UserController userController;
+    private ChannelProvider channelProvider;
+
+    //for dynamic list 
+    JPanel containerPosts = new JPanel(new GridLayout(0, 1));
 
     /**
      * Creates new form Home
@@ -49,39 +59,31 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         showTime();
     }
 
-    public Home(UserDTO userDTO) {
-        System.out.println("getEmail:::::"+userDTO.getEmail());
+    public Home(UserDTO userDTO, ChannelProvider channelProvider) {
         this.loggedUserObj = userDTO;
+        this.channelProvider = channelProvider;
 
         initComponents();
         setSize(750, 600);
         showTime();
 
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width, 0);
 
         // initalizing
-        subscriptionController = new SubscriptionController();
-
-        // sample data
-        if (UserStore.isDevVersion) {
-            sampleDataHandler();
-        }
-
-        // retrieve friends (with subscription status)
-        retrieveAllSubcriptionHandler();
-
+        subscriptionController = (SubscriptionController) ControllerFactory.getInstance().getController(ControllerTypes.SUBSCRIPTION);
+        userController = (UserController) ControllerFactory.getInstance().getController(ControllerTypes.USER);
+        
         // session details
         setSessionDetails();
 
+        // retrieve friends (with subscription status)
+        retrieveAllSubscriptionHandler();
+
+        // show subscriber count
+        displaySubscriberCountHandler();
+
         // underline deactivate button text
         btnDeactivate.setText("<html><u>Remove Account</u></html>");
-
-        // retrieve all posted contents
-        loadPostedContents();
-
-        // retrieve all users (subscribe users & un-subsribe users)
-//        getAllActiveUsers();
     }
 
     private void draggableWindow(MouseEvent evt) {
@@ -105,6 +107,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         tTimer.start();
     }
 
+    // for the testing purpose
     private void loadPostedContents() {
         JPanel container = new JPanel(new GridLayout(0, 1)); // 1 column variable
         for (int i = 0; i < 8; i++) {
@@ -189,6 +192,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         spPostedContent = new javax.swing.JScrollPane();
         friendPanel = new javax.swing.JPanel();
         spFriends = new javax.swing.JScrollPane();
+        lblSubCount = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -263,7 +267,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         lblPost.setText("Live Posted Contents");
 
         lblFriends.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
-        lblFriends.setText("Subscribe/ Unsubscribe Friends");
+        lblFriends.setText("Active Contacts");
 
         btnPost.setBackground(new java.awt.Color(0, 153, 255));
         btnPost.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
@@ -287,6 +291,11 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         btnDeactivate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnDeactivate.setText("Remove Account");
         btnDeactivate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeactivate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDeactivateMouseClicked(evt);
+            }
+        });
 
         postPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -303,7 +312,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         );
         postPanelLayout.setVerticalGroup(
             postPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spPostedContent, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+            .addComponent(spPostedContent, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
         );
 
         friendPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -314,14 +323,16 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         friendPanel.setLayout(friendPanelLayout);
         friendPanelLayout.setHorizontalGroup(
             friendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, friendPanelLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(spFriends, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(spFriends, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         friendPanelLayout.setVerticalGroup(
             friendPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spFriends, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
+            .addComponent(spFriends, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
         );
+
+        lblSubCount.setFont(new java.awt.Font("URW Gothic L", 1, 13)); // NOI18N
+        lblSubCount.setForeground(new java.awt.Color(0, 153, 51));
+        lblSubCount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -367,10 +378,11 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                                        .addComponent(lblCopyright)
-                                        .addGap(9, 9, 9))
-                                    .addComponent(lblFriends, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(lblCopyright)
+                                    .addGroup(mainPanelLayout.createSequentialGroup()
+                                        .addComponent(lblFriends, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblSubCount, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -393,16 +405,19 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                         .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(separatorHrz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addComponent(separatorHrz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblFriends, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblPost, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnPost, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addGap(13, 13, 13)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblFriends, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblPost, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPost, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(lblSubCount, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(postPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -435,9 +450,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         } else {
             setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         }
-
 //        System.exit(0);
-
     }//GEN-LAST:event_btnLogoutMouseClicked
 
     private void mainPanelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainPanelMouseDragged
@@ -466,9 +479,22 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
     }//GEN-LAST:event_btnMinimizeMouseClicked
 
     private void btnPostMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPostMouseClicked
-        Home.this.dispose();
-        new PostContent(loggedUserObj).setVisible(true);
+//        Home.this.dispose();
+        new PostContent(loggedUserObj, channelProvider).setVisible(true);
     }//GEN-LAST:event_btnPostMouseClicked
+
+    private void btnDeactivateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeactivateMouseClicked
+        int isSure = JOptionPane.showConfirmDialog(this, "Are you sure you want to remove your account?", "Are you Sure?", JOptionPane.YES_NO_OPTION);
+        if (isSure == 0) {
+            CommonResponse removeResp = userController.removeAccountHandler(loggedUserObj);
+            if (removeResp.isSuccess()) {
+                this.dispose();
+                channelProvider.sendNotification(loggedUserObj, ObserverType.REMOVE_ACCOUNT);
+            } else {
+                JOptionPane.showMessageDialog(this, removeResp.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnDeactivateMouseClicked
 
     /**
      * @param args the command line arguments
@@ -505,14 +531,20 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         });
     }
 
-    public void retrieveAllSubcriptionHandler() {
+    public void displaySubscriberCountHandler() {
+        CommonResponse resp = subscriptionController.getSubscribedCountHandler(loggedUserObj.getId());
+        if (resp.isSuccess()) {
+            long subsCount = (long) resp.getBody();
+            lblSubCount.setText(subsCount > 0 ? subsCount + " subscriber(s)" : "");
+        }
+    }
+
+    public void retrieveAllSubscriptionHandler() {
         CommonResponse resp = subscriptionController.retrieveAllSubscriptionHandler(loggedUserObj);
         if (resp.isSuccess()) {
             ArrayList<SubscribeUserDTO> subscribeUsers = (ArrayList<SubscribeUserDTO>) resp.getBody();
-
-            JPanel container1 = new JPanel(new GridLayout(0, 1)); // 1 column variable
+            JPanel containerSubscription = new JPanel(new GridLayout(0, 1)); // 1 column variable
             subscribeUsers.forEach((SubscribeUserDTO obj) -> {
-
                 JPanel userWrapperl = new JPanel();
                 userWrapperl.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -537,7 +569,10 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
                         CommonResponse response = subscriptionController.subscriptionUserHandler(new SubscriptionDTO(obj.getUserDTO().getId(), loggedUserObj.getId()));
-                        if(response.isSuccess()) retrieveAllSubcriptionHandler();
+                        if (response.isSuccess()) {
+                            channelProvider.sendNotification(obj.getUserDTO(), ObserverType.SUBSCRIBED_COUNT);
+                            retrieveAllSubscriptionHandler();
+                        }
                     }
                 });
 
@@ -567,9 +602,9 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
                                         .addComponent(sep2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
                 );
                 // ---- END CODED --------
-                container1.add(userWrapperl);
+                containerSubscription.add(userWrapperl);
             });
-            spFriends.setViewportView(container1);
+            spFriends.setViewportView(containerSubscription);
 
         }
     }
@@ -591,7 +626,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
 //        activeUsers.add(new SubscribeUserDTO("Mohan Jayalal", true));
 //        activeUsers.add(new SubscribeUserDTO("Kamal Perea", false));
 
-        JPanel container1 = new JPanel(new GridLayout(0, 1)); // 1 column variable
+        JPanel containerSubscription = new JPanel(new GridLayout(0, 1)); // 1 column variable
 
         for (int i = 0; i < activeUsers.size(); i++) {
             SubscribeUserDTO activeUser = activeUsers.get(i);
@@ -641,9 +676,9 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
                                     .addComponent(sep2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
             );
             //        ---------
-            container1.add(userWrapperl);
+            containerSubscription.add(userWrapperl);
         }
-        spFriends.setViewportView(container1);
+        spFriends.setViewportView(containerSubscription);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -658,6 +693,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
     private javax.swing.JLabel lblFriends;
     private javax.swing.JLabel lblPost;
     private javax.swing.JLabel lblSWLCImg;
+    private javax.swing.JLabel lblSubCount;
     private javax.swing.JLabel lblUserName;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel postPanel;
@@ -668,8 +704,75 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void update(String post) {
-        System.out.println("reg-email: "+loggedUserObj.getEmail());
-        System.out.println("shared-post: "+post);
+    public void notifyPost(PostDTO post) {
+        String postedBy = loggedUserObj.getId() == post.getSharedUser().getId() ? "Me" : post.getSharedUser().getName();
+
+        JPanel subPanel = new JPanel();
+        subPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        JSeparator sep = new JSeparator();
+
+        JTextPane txtPane = new JTextPane();
+        txtPane.setEditable(false);
+        txtPane.setBackground(new java.awt.Color(255, 255, 255));
+        txtPane.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
+
+        JLabel lblPublished = new JLabel();
+        lblPublished.setBackground(new java.awt.Color(255, 255, 255));
+        lblPublished.setFont(new java.awt.Font("URW Gothic L", 0, 13)); // NOI18N
+        lblPublished.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+        txtPane.setText(post.getPost());
+        lblPublished.setText("- Posted by " + postedBy + " on " + post.getTimestamp());
+
+        // ----
+        javax.swing.GroupLayout subPanelLayout = new javax.swing.GroupLayout(subPanel);
+        subPanel.setLayout(subPanelLayout);
+        subPanelLayout.setHorizontalGroup(
+                subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(subPanelLayout.createSequentialGroup()
+                                .addGroup(subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(subPanelLayout.createSequentialGroup()
+                                                .addGap(8, 8, 8)
+                                                .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                                        .addGroup(subPanelLayout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addComponent(lblPublished, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addContainerGap())
+                        .addComponent(sep)
+        );
+        subPanelLayout.setVerticalGroup(
+                subPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subPanelLayout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(txtPane, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblPublished, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)
+                                .addComponent(sep, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        //        ---------
+        containerPosts.add(subPanel);
+        spPostedContent.setViewportView(containerPosts);
+    }
+
+    public UserDTO getLoggedUserObj() {
+        return loggedUserObj;
+    }
+
+    @Override
+    public void notifySubscribers(long subsCount) {
+        lblSubCount.setText(subsCount > 0 ? subsCount + " subscriber(s)" : "");
+    }
+
+    @Override
+    public void notifyAccountRemoved(UserDTO userDTO) {
+        displaySubscriberCountHandler();
+        retrieveAllSubscriptionHandler();
+    }
+
+    @Override
+    public void notifyAccountCreated(UserDTO userDTO) {
+        retrieveAllSubscriptionHandler();
     }
 }

@@ -1,12 +1,17 @@
 package com.swlc.bolton.notifier.views;
 
+import com.swlc.bolton.notifier.config.email.EmailConfigUtility;
+import com.swlc.bolton.notifier.config.email.EmailUtility;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.*;
+import com.swlc.bolton.notifier.controller.ControllerFactory;
 import com.swlc.bolton.notifier.controller.UserController;
 import com.swlc.bolton.notifier.dto.UserDTO;
+import com.swlc.bolton.notifier.enums.ControllerTypes;
 import com.swlc.bolton.notifier.enums.ValidateType;
 import com.swlc.bolton.notifier.json.CommonResponse;
 import com.swlc.bolton.notifier.util.Validator;
 import java.awt.event.MouseEvent;
+import java.util.Properties;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,7 +20,8 @@ import javax.swing.JOptionPane;
  */
 public class Register extends javax.swing.JFrame {
 
-    private UserController userController;
+    private final UserController userController;
+    private final EmailConfigUtility emailConfigUtil;
     // for draggable
     int xMouse;
     int yMouse;
@@ -24,13 +30,12 @@ public class Register extends javax.swing.JFrame {
      * Creates new form Register
      */
     public Register() {
+
         initComponents();
         setSize(438, 450);
 
-        // underline back button text
-        btnBackToLogin.setText("<html><u>Back to Login</u></html>");
-
-        userController = new UserController();
+        userController = (UserController) ControllerFactory.getInstance().getController(ControllerTypes.USER);
+        emailConfigUtil = new EmailConfigUtility();
     }
 
     private void draggableWindow(MouseEvent evt) {
@@ -59,13 +64,11 @@ public class Register extends javax.swing.JFrame {
         lblEmail = new javax.swing.JLabel();
         lblName = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
-        btnBackToLogin = new javax.swing.JLabel();
         topPanel = new javax.swing.JPanel();
-        btnMinimize = new javax.swing.JLabel();
+        btnCloseWindow = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(650, 350));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -133,24 +136,15 @@ public class Register extends javax.swing.JFrame {
             }
         });
 
-        btnBackToLogin.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
-        btnBackToLogin.setText("Back to Log In");
-        btnBackToLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnBackToLogin.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnBackToLoginMouseClicked(evt);
-            }
-        });
-
         topPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        btnMinimize.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btnMinimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/minimise.png"))); // NOI18N
-        btnMinimize.setToolTipText("Minimize");
-        btnMinimize.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnMinimize.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnCloseWindow.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnCloseWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/close.png"))); // NOI18N
+        btnCloseWindow.setToolTipText("Close");
+        btnCloseWindow.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCloseWindow.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnMinimizeMouseClicked(evt);
+                btnCloseWindowMouseClicked(evt);
             }
         });
 
@@ -160,11 +154,11 @@ public class Register extends javax.swing.JFrame {
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topPanelLayout.createSequentialGroup()
                 .addGap(0, 384, Short.MAX_VALUE)
-                .addComponent(btnMinimize))
+                .addComponent(btnCloseWindow))
         );
         topPanelLayout.setVerticalGroup(
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnMinimize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnCloseWindow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -192,11 +186,8 @@ public class Register extends javax.swing.JFrame {
                         .addGroup(mainPanelLayout.createSequentialGroup()
                             .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
-                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                                    .addComponent(btnBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnRegister, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
@@ -224,9 +215,7 @@ public class Register extends javax.swing.JFrame {
                     .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBackToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -251,14 +240,6 @@ public class Register extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNameActionPerformed
 
-    private void btnBackToLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackToLoginMouseClicked
-        backToLoginHandler();
-    }//GEN-LAST:event_btnBackToLoginMouseClicked
-
-    private void btnMinimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMinimizeMouseClicked
-        this.setState(Login.ICONIFIED);
-    }//GEN-LAST:event_btnMinimizeMouseClicked
-
     private void mainPanelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainPanelMouseDragged
         draggableWindow(evt);
     }//GEN-LAST:event_mainPanelMouseDragged
@@ -282,20 +263,29 @@ public class Register extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(Register.this, WARN_PASSWORD_TXT);
                 return;
             }
-            
-            //            
-            CommonResponse regResponse = userController.registerHandler(new UserDTO(name.trim(), email.trim(), password));
 
+            CommonResponse regResponse = userController.registerHandler(new UserDTO(name.trim(), email.trim(), password));
             if (regResponse.isSuccess()) {
-                backToLoginHandler();
+                clearFields();
+                JOptionPane.showMessageDialog(Register.this, regResponse.getMessage(), "Success", JOptionPane.PLAIN_MESSAGE);
+
+                // sent registered mail
+                new Thread(() -> {
+                    sendEmailHandler(email, name);
+                }).start();
+
             } else {
                 JOptionPane.showMessageDialog(Register.this, regResponse.getMessage());
             }
         } else {
-            JOptionPane.showMessageDialog(Register.this, WARN_ALL_INPUT_REQ);
+            JOptionPane.showMessageDialog(Register.this, WARN_ALL_INPUT_REQ, "Warning", JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_btnRegisterMouseClicked
+
+    private void btnCloseWindowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseWindowMouseClicked
+        this.dispose();
+    }//GEN-LAST:event_btnCloseWindowMouseClicked
 
     /**
      * @param args the command line arguments
@@ -338,9 +328,16 @@ public class Register extends javax.swing.JFrame {
         loginForm.setVisible(true);
     }
 
+    private void clearFields() {
+        txtName.setText("");
+        txtEmail.setText("");
+        txtPassword.setText("");
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel btnBackToLogin;
-    private javax.swing.JLabel btnMinimize;
+    private javax.swing.JLabel btnClose;
+    private javax.swing.JLabel btnCloseWindow;
+    private javax.swing.JLabel btnMinimize1;
     private javax.swing.JButton btnRegister;
     private javax.swing.JLabel lblBolImg;
     private javax.swing.JLabel lblEmail;
@@ -350,8 +347,21 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel topPanel;
+    private javax.swing.JPanel topPanel1;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtName;
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
+
+    private void sendEmailHandler(String email, String name) {
+        System.out.println("try to send mail...");
+        try {
+//            Properties smtpProperties = emailConfigUtil.loadProperties();
+//            EmailUtility.sendEmail(smtpProperties, email, EMAIL_REG_SUBJECT, String.format(EMAIL_REG_BODY, name), null);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+//            JOptionPane.showMessageDialog(this, "Error while sending the e-mail: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

@@ -1,7 +1,9 @@
 
-package com.swlc.bolton.notifier.data_store;
+package com.swlc.bolton.notifier.data.store.impl;
 
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.*;
+
+import com.swlc.bolton.notifier.data.store.SuperStore;
 import com.swlc.bolton.notifier.dto.UserDTO;
 import com.swlc.bolton.notifier.enums.StoreType;
 import com.swlc.bolton.notifier.json.CommonResponse;
@@ -11,34 +13,34 @@ import java.util.ArrayList;
  *
  * @author athukorala
  */
-public class UserStore implements SuperStore<UserDTO>{
+public class UserStore implements SuperStore<UserDTO> {
 
-    public static boolean isDevVersion = true; // for testing purposes
+    public static boolean isDevVersion = false; // for testing purposes
     private static final ArrayList<UserDTO> registeredUserList = new ArrayList<>();
 
     @Override
-    public synchronized CommonResponse reserve(UserDTO userDTO) {
+    public synchronized CommonResponse<?> reserve(UserDTO userDTO) {
         return checkAvailability(userDTO, StoreType.RESERVE);
     }
 
     @Override
-    public CommonResponse release(UserDTO userDTO) {
+    public CommonResponse<?> release(UserDTO userDTO) {
         return checkAvailability(userDTO, StoreType.RELEASE);
     }
     
     
     @Override
-    public CommonResponse retireveListHandler() {
+    public CommonResponse<?> retrieveListHandler() {
         return new CommonResponse<>(true, registeredUserList);
     }
     
     @Override
-    public CommonResponse retrieveData(UserDTO userDTO) {
+    public CommonResponse<?> retrieveData(UserDTO userDTO) {
         return checkAvailability(userDTO, StoreType.RETRIEVE);
     }
 
     @Override
-    public CommonResponse checkAvailability(UserDTO userDTO, StoreType store) {
+    public CommonResponse<?> checkAvailability(UserDTO userDTO, StoreType store) {
         try {
             UserDTO availableObj = null;
             for (int i = 0; i < registeredUserList.size(); i++) {
@@ -51,7 +53,7 @@ public class UserStore implements SuperStore<UserDTO>{
                 case RESERVE:
                     if (availableObj == null) {
                         registeredUserList.add(userDTO);
-                        return new CommonResponse<>(true, userDTO);
+                        return new CommonResponse<>(true, COMMON_SUCCESS_MSG, userDTO);
                     } else {
                         return new CommonResponse<>(false,  ADDED_EMAIL_ALREADY_EXIST);
                     }

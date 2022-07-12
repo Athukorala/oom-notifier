@@ -3,17 +3,18 @@ package com.swlc.bolton.notifier.views;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.ENTERED_EMAIL_OR_PASSWORD_INVALID;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_ALL_INPUT_REQ;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_EMAIL_TXT;
-import com.swlc.bolton.notifier.controller.SubscriptionController;
+import com.swlc.bolton.notifier.controller.ControllerFactory;
+
 import com.swlc.bolton.notifier.controller.UserController;
-import com.swlc.bolton.notifier.data_store.ChannelProvider;
-import com.swlc.bolton.notifier.data_store.UserStore;
+import com.swlc.bolton.notifier.data.store.impl.ChannelProvider;
+import com.swlc.bolton.notifier.data.store.impl.UserStore;
 import com.swlc.bolton.notifier.dto.UserDTO;
+import com.swlc.bolton.notifier.enums.ControllerTypes;
+import static com.swlc.bolton.notifier.enums.ObserverType.CREATE_ACCOUNT;
 import com.swlc.bolton.notifier.enums.ValidateType;
 import com.swlc.bolton.notifier.json.CommonResponse;
 import com.swlc.bolton.notifier.util.Validator;
 import java.awt.event.MouseEvent;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,8 +23,8 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
-    private UserController userController;
-    private ChannelProvider channelProvider;
+    private final UserController userController;
+    private final ChannelProvider channelProvider;
     // for draggable
     private int xMouse;
     private int yMouse;
@@ -39,7 +40,7 @@ public class Login extends javax.swing.JFrame {
         btnRegister.setText("<html>New user? <u>Register now</u></html>");
 
         // initalizing
-        userController = new UserController();
+        userController = (UserController) ControllerFactory.getInstance().getController(ControllerTypes.USER);
         channelProvider = new ChannelProvider();
 
         // sample data
@@ -317,7 +318,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMinimizeMouseClicked
 
     private void btnRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegisterMouseClicked
-        Login.this.dispose();
+//        Login.this.dispose();
         new Register().setVisible(true);
     }//GEN-LAST:event_btnRegisterMouseClicked
 
@@ -361,17 +362,10 @@ public class Login extends javax.swing.JFrame {
             txtEmail.setText("");
             txtPassword.setText("");
         }
-        Home home = new Home(userDto);
-
+        Home home = new Home(userDto, channelProvider);
         channelProvider.addObserver(home);
-
+        channelProvider.sendNotification(userDto, CREATE_ACCOUNT);
         home.setVisible(true);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                channelProvider.setPost("Abc...");
-            }
-        }, 300L);
     }
 
     // for testing purposes

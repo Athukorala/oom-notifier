@@ -1,15 +1,11 @@
 package com.swlc.bolton.notifier.views;
 
-import static com.swlc.bolton.notifier.constants.ApplicationConstant.ENTERED_EMAIL_OR_PASSWORD_INVALID;
-import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_ALL_INPUT_REQ;
-import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_EMAIL_TXT;
 import static com.swlc.bolton.notifier.constants.ApplicationConstant.WARN_POST_INPUT_REQ;
-import com.swlc.bolton.notifier.controller.SubscriptionController;
-import com.swlc.bolton.notifier.data_store.ChannelObserver;
+
+import com.swlc.bolton.notifier.data.store.impl.ChannelProvider;
+import com.swlc.bolton.notifier.dto.PostDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
-import com.swlc.bolton.notifier.enums.ValidateType;
-import com.swlc.bolton.notifier.json.CommonResponse;
-import com.swlc.bolton.notifier.util.Validator;
+import com.swlc.bolton.notifier.enums.ObserverType;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -21,13 +17,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
-import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 /**
  *
  * @author athukorala
  */
-public class PostContent extends javax.swing.JFrame implements ChannelObserver {
+public class PostContent extends javax.swing.JFrame {
 
     // for draggable
     int xMouse;
@@ -35,22 +30,22 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
 
     //
     private UserDTO loggedUserObj;
-    private SubscriptionController subscriptionController;
+    private ChannelProvider channelProvider;
 
     /**
      * Creates new form PostContent
      */
     public PostContent() {
         initComponents();
-        setSize(750, 600);
+       setSize(554, 383);
         showTime();
     }
 
-    public PostContent(UserDTO userDTO) {
+    public PostContent(UserDTO userDTO, ChannelProvider channelProvider) {
+        this.channelProvider = channelProvider;
         this.loggedUserObj = userDTO;
         initComponents();
-        setLocationRelativeTo(null);
-        setSize(750, 600);
+        setSize(554, 383);
         showTime();
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -59,13 +54,10 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
 //        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 //        this.setLocation(dim.width, dim.height / 2 - this.getSize().height / 2);
 
-        // initalizing
-        subscriptionController = new SubscriptionController();
-        
         // session details
         setSessionDetails();
         // underline back button text
-        btnBackToHome.setText("<html><u>Back to Home</u></html>");
+//        btnBackToHome.setText("<html><u>Back to Home</u></html>");
     }
 
     private void draggableWindow(MouseEvent evt) {
@@ -102,13 +94,11 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
         lblSWLCImg = new javax.swing.JLabel();
         lblBolImg = new javax.swing.JLabel();
         btnLogout = new javax.swing.JLabel();
-        btnMinimize = new javax.swing.JLabel();
         separatorHrz = new javax.swing.JSeparator();
         lblCopyright = new javax.swing.JLabel();
         lblDevelopedTxt = new javax.swing.JLabel();
         lblUserName = new javax.swing.JLabel();
         txtDate = new javax.swing.JLabel();
-        btnBackToHome = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         lblTitle = new javax.swing.JLabel();
         spPostWrapper = new javax.swing.JScrollPane();
@@ -119,7 +109,6 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(750, 600));
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -159,17 +148,6 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
             }
         });
 
-        btnMinimize.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
-        btnMinimize.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btnMinimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/minimise.png"))); // NOI18N
-        btnMinimize.setToolTipText("Minimize");
-        btnMinimize.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnMinimize.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnMinimizeMouseClicked(evt);
-            }
-        });
-
         lblCopyright.setFont(new java.awt.Font("URW Gothic L", 0, 11)); // NOI18N
         lblCopyright.setText("Developed by Tharindu Athukorala");
 
@@ -185,16 +163,6 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
         txtDate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         txtDate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        btnBackToHome.setDisplayedMnemonic('W');
-        btnBackToHome.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
-        btnBackToHome.setText("Back to Home");
-        btnBackToHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnBackToHome.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnBackToHomeMouseClicked(evt);
-            }
-        });
-
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
@@ -203,13 +171,13 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblTitle.setText("What's on your mind?");
         jPanel1.add(lblTitle);
-        lblTitle.setBounds(130, 20, 220, 40);
+        lblTitle.setBounds(120, 20, 230, 40);
 
         txtPost.setFont(new java.awt.Font("URW Gothic L", 0, 14)); // NOI18N
         spPostWrapper.setViewportView(txtPost);
 
         jPanel1.add(spPostWrapper);
-        spPostWrapper.setBounds(20, 60, 420, 140);
+        spPostWrapper.setBounds(10, 60, 370, 140);
 
         btnPost.setBackground(new java.awt.Color(0, 153, 255));
         btnPost.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
@@ -228,17 +196,17 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
             }
         });
         jPanel1.add(btnPost);
-        btnPost.setBounds(20, 220, 193, 40);
+        btnPost.setBounds(110, 200, 120, 40);
 
         lblBackgroundImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/post_background.png"))); // NOI18N
         jPanel1.add(lblBackgroundImg);
-        lblBackgroundImg.setBounds(250, 20, 490, 380);
+        lblBackgroundImg.setBounds(160, 0, 390, 260);
 
         lblTitle1.setFont(new java.awt.Font("URW Gothic L", 1, 14)); // NOI18N
         lblTitle1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblTitle1.setText("Add your Post");
         jPanel1.add(lblTitle1);
-        lblTitle1.setBounds(20, 20, 100, 40);
+        lblTitle1.setBounds(10, 20, 110, 40);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -250,27 +218,22 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
                 .addGap(6, 6, 6)
                 .addComponent(lblBolImg)
                 .addGap(12, 12, 12)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(202, 202, 202)
-                        .addComponent(btnMinimize)
-                        .addGap(6, 6, 6)
+                        .addGap(42, 42, 42)
                         .addComponent(btnLogout))
-                    .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lblUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addComponent(separatorHrz, javax.swing.GroupLayout.PREFERRED_SIZE, 763, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(mainPanelLayout.createSequentialGroup()
                     .addGap(15, 15, 15)
                     .addComponent(lblDevelopedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(345, 345, 345)
-                    .addComponent(lblCopyright, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(btnBackToHome, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(144, 144, 144)
+                    .addComponent(lblCopyright, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -283,19 +246,14 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
                         .addGap(8, 8, 8)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(btnMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnLogout))
                         .addGap(8, 8, 8)
                         .addComponent(lblUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addComponent(separatorHrz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(btnBackToHome, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(1, 1, 1)
@@ -307,11 +265,11 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -326,17 +284,14 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
     }//GEN-LAST:event_lblBolImgMouseDragged
 
     private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
-        int isClose = JOptionPane.showConfirmDialog(this, "Are you sure you want to Logout?", "Are you Sure?", JOptionPane.YES_NO_OPTION);
-        if (isClose == 0) {
-            this.dispose();
-        } else {
-            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        }
+//        int isClose = JOptionPane.showConfirmDialog(this, "Are you sure you want to close?", "Are you Sure?", JOptionPane.YES_NO_OPTION);
+//        if (isClose == 0) {
+//            this.dispose();
+//        } else {
+//            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+//        }
+        this.dispose();
     }//GEN-LAST:event_btnLogoutMouseClicked
-
-    private void btnMinimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMinimizeMouseClicked
-        this.setState(Home.ICONIFIED);
-    }//GEN-LAST:event_btnMinimizeMouseClicked
 
     private void mainPanelMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainPanelMouseMoved
         xMouse = evt.getX();
@@ -353,17 +308,17 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
 
     private void btnPostMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPostMouseClicked
         String post = txtPost.getText();
-         if (post.trim().equals("")) {
-                JOptionPane.showMessageDialog(this, WARN_POST_INPUT_REQ);
-                return;
-         }
-         subscriptionController.publishPostHandler(loggedUserObj, post);
-         
+        if (post.trim().equals("")) {
+            JOptionPane.showMessageDialog(this, WARN_POST_INPUT_REQ);
+            return;
+        }
+        txtPost.setText("");
+        SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy  hh:mm a");
+        String formatDate = df.format(new Date());
+        channelProvider.sendNotification(new PostDTO(loggedUserObj, formatDate, post.trim()), ObserverType.PUBLISHED_POST);
+        
+        
     }//GEN-LAST:event_btnPostMouseClicked
-
-    private void btnBackToHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackToHomeMouseClicked
-        backToHome();
-    }//GEN-LAST:event_btnBackToHomeMouseClicked
 
     /**
      * @param args the command line arguments
@@ -402,16 +357,14 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
 
     private void backToHome() {
         PostContent.this.dispose();
-        new Home(loggedUserObj).setVisible(rootPaneCheckingEnabled);
+        new Home(loggedUserObj, channelProvider).setVisible(rootPaneCheckingEnabled);
     }
 
     private void setSessionDetails() {
         lblUserName.setText(loggedUserObj.getName());
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel btnBackToHome;
     private javax.swing.JLabel btnLogout;
-    private javax.swing.JLabel btnMinimize;
     private javax.swing.JButton btnPost;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblBackgroundImg;
@@ -428,9 +381,4 @@ public class PostContent extends javax.swing.JFrame implements ChannelObserver {
     private javax.swing.JLabel txtDate;
     private javax.swing.JTextPane txtPost;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void update(String post) {
-        System.out.println("calll.........................");
-    }
 }
