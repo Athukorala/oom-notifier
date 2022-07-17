@@ -52,7 +52,7 @@ public class ChannelProvider implements ChannelSubject<Object> {
                     if (postDTO.getSharedUser().getId() == home.getLoggedUserObj().getId()) {
                         observer.notifyPost(postDTO); // call notify method
                     } else {
-                        CommonResponse<?> subscribers = subscriptionController.getSubscribersIDHandler(postDTO.getSharedUser().getId());
+                        CommonResponse subscribers = subscriptionController.getSubscribersIDHandler(postDTO.getSharedUser().getId());
                         if (subscribers.isSuccess()) {
                             ArrayList<Long> subsIds = (ArrayList<Long>) subscribers.getBody();
                             subsIds.forEach(id -> {
@@ -67,9 +67,9 @@ public class ChannelProvider implements ChannelSubject<Object> {
                 case SUBSCRIBED_COUNT:
                     UserDTO userDTO = (UserDTO) obj;
                     if (userDTO.getId() == home.getLoggedUserObj().getId()) {
-                        CommonResponse<Long> subscribers = subscriptionController.getSubscribedCountHandler(userDTO.getId());
+                        CommonResponse subscribers = subscriptionController.getSubscribedCountHandler(userDTO.getId());
                         if (subscribers.isSuccess()) {
-                            long subsCount = subscribers.getBody();
+                            long subsCount = (long) subscribers.getBody();
                             observer.notifySubscribers(subsCount); // call notify method
                         }
                     }

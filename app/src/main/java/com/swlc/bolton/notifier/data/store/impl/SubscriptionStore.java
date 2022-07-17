@@ -20,27 +20,27 @@ public class SubscriptionStore implements SuperStore<SubscriptionDTO> {
     private static final ArrayList<SubscriptionDTO> subscribedList = new ArrayList<>();
 
     @Override
-    public synchronized CommonResponse<?> reserve(SubscriptionDTO subscriberDTO) {
+    public synchronized CommonResponse reserve(SubscriptionDTO subscriberDTO) {
         return checkAvailability(subscriberDTO, StoreType.RESERVE);
     }
 
     @Override
-    public CommonResponse<?> release(SubscriptionDTO dto) {
+    public CommonResponse release(SubscriptionDTO dto) {
         return checkAvailability(dto, StoreType.RELEASE);
     }
 
     @Override
-    public CommonResponse<?> retrieveListHandler() {
-        return new CommonResponse<>(true, subscribedList);
+    public CommonResponse retrieveListHandler() {
+        return new CommonResponse(true, subscribedList);
     }
 
     @Override
-    public CommonResponse<?> retrieveData(SubscriptionDTO dto) {
+    public CommonResponse retrieveData(SubscriptionDTO dto) {
         return checkAvailability(dto, StoreType.RETRIEVE);
     }
 
     @Override
-    public CommonResponse<?> checkAvailability(SubscriptionDTO subscriberDTO, StoreType type) {
+    public CommonResponse checkAvailability(SubscriptionDTO subscriberDTO, StoreType type) {
         try {
             switch (type) {
                 case RELEASE:
@@ -50,7 +50,7 @@ public class SubscriptionStore implements SuperStore<SubscriptionDTO> {
                             subscribedList.remove(subscribedObj);
                         }
                     }
-                     return new CommonResponse<>(true, subscriberDTO);
+                     return new CommonResponse(true, subscriberDTO);
                 
                 case RESERVE:
                     SubscriptionDTO availableObj = null;
@@ -65,11 +65,11 @@ public class SubscriptionStore implements SuperStore<SubscriptionDTO> {
                     } else {
                         subscribedList.remove(availableObj);
                     }
-                    return new CommonResponse<>(true, subscriberDTO);
+                    return new CommonResponse(true, subscriberDTO);
 
                 case RETRIEVE:
                     ArrayList<SubscribeUserDTO> SubscribeUserDTO = new ArrayList<>();
-                    CommonResponse<?> resp = new UserStore().retrieveListHandler();
+                    CommonResponse resp = new UserStore().retrieveListHandler();
                     ArrayList<UserDTO> userList = (ArrayList<UserDTO>) resp.getBody();
 
                     userList.forEach(userDetail -> {
@@ -91,34 +91,34 @@ public class SubscriptionStore implements SuperStore<SubscriptionDTO> {
                         tempSubscribeUser.setIsSubscribe(isFound);
                         SubscribeUserDTO.add(tempSubscribeUser);
                     });
-                    return new CommonResponse<>(true, SubscribeUserDTO);
+                    return new CommonResponse(true, SubscribeUserDTO);
 
                 default:
                     break;
             }
-            return new CommonResponse<>(false, USER_NOT_FOUND);
+            return new CommonResponse(false, USER_NOT_FOUND);
         } catch (Exception e) {
-            return new CommonResponse<>(false, null, e.getMessage());
+            return new CommonResponse(false, null, e.getMessage());
         }
     }
 
-    public CommonResponse<ArrayList<Long>> getSubscribers(long userId) {
+    public CommonResponse getSubscribers(long userId) {
         ArrayList<Long> subscribers = new ArrayList<>();
         for (SubscriptionDTO subscribedObj : subscribedList) {
             if (userId == subscribedObj.getSubscriberUserId()) {
                 subscribers.add(subscribedObj.getSubscribedBy());
             }
         }
-        return new CommonResponse<>(subscribers.size() > 0, subscribers);
+        return new CommonResponse(subscribers.size() > 0, subscribers);
     }
 
-    public CommonResponse<Long> getSubscriberCount(long userId) {
+    public CommonResponse getSubscriberCount(long userId) {
         long count = 0;
         for (SubscriptionDTO subscriptionDTO : subscribedList) {
             if (userId == subscriptionDTO.getSubscriberUserId()) {
                 ++count;
             }
         }
-        return new CommonResponse<>(true, count);
+        return new CommonResponse(true, count);
     }
 }

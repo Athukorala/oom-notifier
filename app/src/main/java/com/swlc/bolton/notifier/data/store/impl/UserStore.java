@@ -19,28 +19,28 @@ public class UserStore implements SuperStore<UserDTO> {
     private static final ArrayList<UserDTO> registeredUserList = new ArrayList<>();
 
     @Override
-    public synchronized CommonResponse<?> reserve(UserDTO userDTO) {
+    public synchronized CommonResponse reserve(UserDTO userDTO) {
         return checkAvailability(userDTO, StoreType.RESERVE);
     }
 
     @Override
-    public CommonResponse<?> release(UserDTO userDTO) {
+    public CommonResponse release(UserDTO userDTO) {
         return checkAvailability(userDTO, StoreType.RELEASE);
     }
     
     
     @Override
-    public CommonResponse<?> retrieveListHandler() {
-        return new CommonResponse<>(true, registeredUserList);
+    public CommonResponse retrieveListHandler() {
+        return new CommonResponse(true, registeredUserList);
     }
     
     @Override
-    public CommonResponse<?> retrieveData(UserDTO userDTO) {
+    public CommonResponse retrieveData(UserDTO userDTO) {
         return checkAvailability(userDTO, StoreType.RETRIEVE);
     }
 
     @Override
-    public CommonResponse<?> checkAvailability(UserDTO userDTO, StoreType store) {
+    public CommonResponse checkAvailability(UserDTO userDTO, StoreType store) {
         try {
             UserDTO availableObj = null;
             for (int i = 0; i < registeredUserList.size(); i++) {
@@ -53,26 +53,26 @@ public class UserStore implements SuperStore<UserDTO> {
                 case RESERVE:
                     if (availableObj == null) {
                         registeredUserList.add(userDTO);
-                        return new CommonResponse<>(true, COMMON_SUCCESS_MSG, userDTO);
+                        return new CommonResponse(true, COMMON_SUCCESS_MSG, userDTO);
                     } else {
-                        return new CommonResponse<>(false,  ADDED_EMAIL_ALREADY_EXIST);
+                        return new CommonResponse(false,  ADDED_EMAIL_ALREADY_EXIST);
                     }
                 case RELEASE:
                     if (availableObj != null) {
                         registeredUserList.remove(availableObj);
-                        return new CommonResponse<>(true, availableObj);
+                        return new CommonResponse(true, availableObj);
                     }   break;
                 case RETRIEVE:
-                    if (availableObj != null) return new CommonResponse<>(true, availableObj);
+                    if (availableObj != null) return new CommonResponse(true, availableObj);
                     break;
                 default:
                     break;
             }
             
-            return new CommonResponse<>(false,  USER_NOT_FOUND);
+            return new CommonResponse(false,  USER_NOT_FOUND);
 
         } catch (Exception e) {
-            return new CommonResponse<>(false, null, e.getMessage());
+            return new CommonResponse(false, null, e.getMessage());
         }
     }
 

@@ -7,11 +7,11 @@ import java.io.Serializable;
  *
  * @author athukorala
  */
-public class CommonResponse<T> implements Serializable {
+public class CommonResponse implements Serializable {
 
     private boolean success;
     private String message;
-    private T body;
+    private Object body;
 
     public CommonResponse() {
     }
@@ -21,13 +21,13 @@ public class CommonResponse<T> implements Serializable {
         this.message = message;
     }
 
-    public CommonResponse(boolean success, String message, T body) {
+    public CommonResponse(boolean success, String message, Object body) {
         this.success = success;
         this.message = message;
         this.body = body;
     }
 
-    public CommonResponse(boolean success, T body) {
+    public CommonResponse(boolean success, Object body) {
         this.success = success;
         this.body = body;
     }
@@ -48,11 +48,11 @@ public class CommonResponse<T> implements Serializable {
         this.message = message;
     }
 
-    public T getBody() {
+    public Object getBody() {
         return body;
     }
 
-    public void setBody(T body) {
+    public void setBody(Object body) {
         this.body = body;
     }
 

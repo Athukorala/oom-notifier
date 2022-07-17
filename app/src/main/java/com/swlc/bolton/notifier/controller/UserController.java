@@ -20,12 +20,12 @@ public class UserController implements SuperController{
     }
     
 
-    public CommonResponse<?> registerHandler(UserDTO userDTO) {
+    public CommonResponse registerHandler(UserDTO userDTO) {
         return userStore.reserve(userDTO);
     }
     
-    public CommonResponse<?> loginHandler(UserDTO userDTO) {
-        CommonResponse<?> checkAvailability = userStore.retrieveData(userDTO);
+    public CommonResponse loginHandler(UserDTO userDTO) {
+        CommonResponse checkAvailability = userStore.retrieveData(userDTO);
         
         if(checkAvailability.isSuccess()) {
             UserDTO retrieveUserObj = (UserDTO) checkAvailability.getBody();
@@ -36,8 +36,8 @@ public class UserController implements SuperController{
         return checkAvailability;
     }
     
-    public CommonResponse<?> removeAccountHandler(UserDTO userDTO) {
-        CommonResponse<?> release = userStore.release(userDTO);
+    public CommonResponse removeAccountHandler(UserDTO userDTO) {
+        CommonResponse release = userStore.release(userDTO);
         // remove subscriptions
         if(release.isSuccess()) subscriptionController.removeSubscriptionHandler(new SubscriptionDTO(0, userDTO.getId()));
         return release;

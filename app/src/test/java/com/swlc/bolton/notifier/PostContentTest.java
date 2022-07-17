@@ -1,19 +1,26 @@
 package com.swlc.bolton.notifier;
 
+import com.swlc.bolton.notifier.controller.ControllerFactory;
+import com.swlc.bolton.notifier.controller.UserController;
 import com.swlc.bolton.notifier.data.store.impl.ChannelProvider;
 import com.swlc.bolton.notifier.dto.PostDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
+import com.swlc.bolton.notifier.enums.ControllerTypes;
 import com.swlc.bolton.notifier.enums.ObserverType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PostContentTest {
-    private final ChannelProvider channelProvider;
-    public PostContentTest() {
+    private ChannelProvider channelProvider;
+
+    @BeforeEach
+    public void init() {
         channelProvider = new ChannelProvider();
     }
+
     @Test
     public void testPublishPost() {
         UserDTO loggedUserObj = new UserDTO(new LoginTest().TEST_ID, new LoginTest().TEST_NAME, new LoginTest().TEST_EMAIL, new LoginTest().TEST_PASSWORD);
