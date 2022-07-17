@@ -1,11 +1,8 @@
 package com.swlc.bolton.notifier;
 
-import com.swlc.bolton.notifier.controller.ControllerFactory;
-import com.swlc.bolton.notifier.controller.UserController;
 import com.swlc.bolton.notifier.data.store.impl.ChannelProvider;
 import com.swlc.bolton.notifier.dto.PostDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
-import com.swlc.bolton.notifier.enums.ControllerTypes;
 import com.swlc.bolton.notifier.enums.ObserverType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

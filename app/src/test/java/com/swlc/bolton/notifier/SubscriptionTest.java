@@ -2,7 +2,6 @@ package com.swlc.bolton.notifier;
 
 import com.swlc.bolton.notifier.controller.ControllerFactory;
 import com.swlc.bolton.notifier.controller.SubscriptionController;
-import com.swlc.bolton.notifier.data.store.impl.ChannelProvider;
 import com.swlc.bolton.notifier.dto.SubscriptionDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
 import com.swlc.bolton.notifier.enums.ControllerTypes;
