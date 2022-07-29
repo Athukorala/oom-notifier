@@ -356,8 +356,8 @@ public class Register extends javax.swing.JFrame {
     private void sendEmailHandler(String email, String name) {
         System.out.println("try to send mail...");
         try {
-//            Properties smtpProperties = emailConfigUtil.loadProperties();
-//            EmailUtility.sendEmail(smtpProperties, email, EMAIL_REG_SUBJECT, String.format(EMAIL_REG_BODY, name), null);
+            Properties smtpProperties = emailConfigUtil.loadProperties();
+            EmailUtility.sendEmail(smtpProperties, email, EMAIL_REG_SUBJECT, String.format(EMAIL_REG_BODY, name), null);
 
         } catch (Exception ex) {
             ex.printStackTrace();
