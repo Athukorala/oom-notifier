@@ -5,7 +5,7 @@
 
 Guidance Link: https://docs.gradle.org/current/userguide/installation.html
 
-Run Commands
+Project Run Commands (gradle)
 
   For Linux:    `./gradlew run`
 

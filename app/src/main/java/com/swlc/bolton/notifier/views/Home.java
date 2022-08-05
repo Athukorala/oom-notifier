@@ -578,7 +578,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
                     }
                 });
 
-                // ---- CODED --------
+                // ---- SCROLLABLE CONTENT - CODE --------
                 javax.swing.GroupLayout userWrapperlLayout = new javax.swing.GroupLayout(userWrapperl);
                 userWrapperl.setLayout(userWrapperlLayout);
                 userWrapperlLayout.setHorizontalGroup(
@@ -603,7 +603,7 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
                                         .addGap(18, 18, 18)
                                         .addComponent(sep2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE))
                 );
-                // ---- END CODED --------
+                // ---- END CODE --------
                 containerSubscription.add(userWrapperl);
             });
             spFriends.setViewportView(containerSubscription);
