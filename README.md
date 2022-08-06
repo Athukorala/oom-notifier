@@ -1,12 +1,22 @@
-# Application Name: notifier
- _OOM Assignment - Simple social media desktop application_
+# Application Name: OOM Notifier
+OOM Assignment - Simple social media desktop application
+
+
+##How to run this project?
+
+**Additional dependencies used**
+
+_(Those dependencies are installed automatically after run with gradle)_
+
+* javax.mail (version: 1.4.7) <- Used for sending emails
+* JUnit (version: 5.8.1) <- Used for build tool
 
 **Gradle Installation & Run**
 
 Guidance Link: https://docs.gradle.org/current/userguide/installation.html
 
-Project Run Commands (gradle)
+After you set up the gradle, follow below command to run the application.
 
-  For Linux:    `./gradlew run`
+if you are using Linux/Unix:    `./gradlew run`
 
-  For Windows:  `gradle run`
+if you are using Windows:  `gradle run`
