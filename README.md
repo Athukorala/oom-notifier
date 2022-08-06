@@ -2,7 +2,7 @@
 OOM Assignment - Simple social media desktop application
 
 
-##How to run this project?
+## How to run this project?
 
 **Additional dependencies used**
 
