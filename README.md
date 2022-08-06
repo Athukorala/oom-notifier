@@ -9,7 +9,7 @@ OOM Assignment - Simple social media desktop application
 _(Those dependencies are installed automatically after run with gradle)_
 
 * javax.mail (version: 1.4.7) <- Used for sending emails
-* JUnit (version: 5.8.1) <- Used for build tool
+* JUnit (version: 5.8.1) <- Used for testing
 
 **Gradle Installation & Run**
 
