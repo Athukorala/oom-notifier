@@ -16,6 +16,7 @@ import com.swlc.bolton.notifier.json.CommonResponse;
 import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -35,18 +36,21 @@ public class RegisterTest {
     }
     
     @Test
+    @DisplayName("Test register new user with valid conditions")
     public void testRegisterNewUserWithValidConditions() {
         CommonResponse regResponse = userController.registerHandler(new UserDTO(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD));
         assertTrue(regResponse.isSuccess());
     }
     
     @Test
+    @DisplayName("Test register new user with already registered email")
     public void testRegisterNewUserWithAlreadyRegisteredEmail() {
         CommonResponse regResponse = userController.registerHandler(new UserDTO(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD));
         assertEquals("Added email already exist.",regResponse.getMessage());
     }
     
     @Test
+    @DisplayName("Test send email function")
     public void testSendEmailToTestUser() {
         try {
             Properties smtpProperties = new EmailConfigUtility().loadProperties();
@@ -58,6 +62,7 @@ public class RegisterTest {
     }
   
     @Test
+    @DisplayName("Test register another new user with valid details")
     public void testRegisterAnotherNewUserWithValidConditions() {
         CommonResponse regResponse = userController.registerHandler(new UserDTO(2, "Test", "test@gmail.com", "test@123"));
         assertTrue(regResponse.isSuccess());

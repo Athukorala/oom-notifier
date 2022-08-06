@@ -50,15 +50,6 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
     //for dynamic list 
     JPanel containerPosts = new JPanel(new GridLayout(0, 1));
 
-    /**
-     * Creates new form Home
-     */
-    public Home() {
-        initComponents();
-        setSize(750, 535);
-        showTime();
-    }
-
     public Home(UserDTO userDTO, ChannelProvider channelProvider) {
         this.loggedUserObj = userDTO;
         this.channelProvider = channelProvider;
@@ -66,7 +57,6 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
         initComponents();
         setSize(750, 535);
         showTime();
-
         this.setLocation(dim.width, 0);
 
         // initalizing
@@ -84,6 +74,11 @@ public class Home extends javax.swing.JFrame implements ChannelObserver {
 
         // underline deactivate button text
         btnDeactivate.setText("<html><u>Remove Account</u></html>");
+    }
+    public Home() {
+        initComponents();
+        setSize(750, 535);
+        showTime();
     }
 
     private void draggableWindow(MouseEvent evt) {

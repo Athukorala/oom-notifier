@@ -7,6 +7,7 @@ import com.swlc.bolton.notifier.dto.UserDTO;
 import com.swlc.bolton.notifier.enums.ControllerTypes;
 import com.swlc.bolton.notifier.json.CommonResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
@@ -22,17 +23,20 @@ public class SubscriptionTest {
     }
 
     @Test
+    @DisplayName("Test Subscribe and Unsubscribe feature")
     public void testSubscribeAndUnsubscribeUser() {
         CommonResponse response = subscriptionController.subscriptionUserHandler(new SubscriptionDTO(1, 2));
         assertTrue(response.isSuccess());
     }
     @Test
+    @DisplayName("Test retrieve all channels")
     public void testRetrieveAllSubscriptionHandler() {
         CommonResponse resp = subscriptionController.retrieveAllSubscriptionHandler(new UserDTO(new LoginTest().TEST_ID,new LoginTest().TEST_NAME,new LoginTest().TEST_EMAIL,new LoginTest().TEST_PASSWORD));
         assertTrue(resp.isSuccess());
     }
 
     @Test
+    @DisplayName("Test get subscribed count for user")
     public void testDisplaySubscriberCountHandler() {
         CommonResponse resp = subscriptionController.getSubscribedCountHandler(1);
         assertEquals(Long.parseLong("0"), resp.getBody());

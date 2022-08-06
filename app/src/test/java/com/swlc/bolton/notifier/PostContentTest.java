@@ -5,6 +5,7 @@ import com.swlc.bolton.notifier.dto.PostDTO;
 import com.swlc.bolton.notifier.dto.UserDTO;
 import com.swlc.bolton.notifier.enums.ObserverType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ public class PostContentTest {
     }
 
     @Test
+    @DisplayName("Test user publish post")
     public void testPublishPost() {
         UserDTO loggedUserObj = new UserDTO(new LoginTest().TEST_ID, new LoginTest().TEST_NAME, new LoginTest().TEST_EMAIL, new LoginTest().TEST_PASSWORD);
         SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy  hh:mm a");

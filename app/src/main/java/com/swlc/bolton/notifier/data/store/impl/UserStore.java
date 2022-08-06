@@ -44,11 +44,8 @@ public class UserStore implements SuperStore<UserDTO> {
         try {
             UserDTO availableObj = null;
             for (UserDTO dto : registeredUserList) {
-                if (userDTO.getEmail().equals(dto.getEmail())) {
-                    availableObj = dto;
-                }
+                if (userDTO.getEmail().equals(dto.getEmail())) availableObj = dto;
             }
-
             switch (store) {
                 case RESERVE:
                     if (availableObj == null) {
@@ -68,12 +65,9 @@ public class UserStore implements SuperStore<UserDTO> {
                 default:
                     break;
             }
-            
             return new CommonResponse(false,  USER_NOT_FOUND);
-
         } catch (Exception e) {
             return new CommonResponse(false, null, e.getMessage());
         }
     }
-
 }

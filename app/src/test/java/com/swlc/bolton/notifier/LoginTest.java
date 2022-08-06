@@ -23,18 +23,21 @@ public class LoginTest {
     }
 
     @Test
+    @DisplayName("Test user login with invalid credentials")
     public void testUserLoginWithInvalidCredentials() {
         CommonResponse loginResponse = userController.loginHandler(new UserDTO(TEST_EMAIL, "invalid@passwod"));
         assertFalse(loginResponse.isSuccess());
     }
 
     @Test
+    @DisplayName("Test user login with valid credentials")
     public void testUserLoginWithValidCredentials() {
         CommonResponse loginResponse = userController.loginHandler(new UserDTO(TEST_EMAIL, TEST_PASSWORD));
         assertTrue(loginResponse.isSuccess());
     }
 
     @Test
+    @DisplayName("Test user remove account")
     public void testUserRemoveAccount() {
         UserDTO loggedUserObj = new UserDTO(TEST_ID, TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
         CommonResponse removeResp = userController.removeAccountHandler(loggedUserObj);
