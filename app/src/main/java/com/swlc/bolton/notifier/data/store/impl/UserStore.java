@@ -15,8 +15,8 @@ import java.util.ArrayList;
  */
 public class UserStore implements SuperStore<UserDTO> {
 
-    public static boolean isDevVersion = false; // for testing purposes
-    private static final ArrayList<UserDTO> registeredUserList = new ArrayList<>();
+    public static boolean isDevVersion = false; // for dev purposes
+    private static final ArrayList<UserDTO> registeredUserList = new ArrayList<>(); // registered user list
 
     @Override
     public synchronized CommonResponse reserve(UserDTO userDTO) {
@@ -43,9 +43,9 @@ public class UserStore implements SuperStore<UserDTO> {
     public CommonResponse checkAvailability(UserDTO userDTO, StoreType store) {
         try {
             UserDTO availableObj = null;
-            for (int i = 0; i < registeredUserList.size(); i++) {
-                if (userDTO.getEmail().equals(registeredUserList.get(i).getEmail())) {
-                    availableObj = registeredUserList.get(i);
+            for (UserDTO dto : registeredUserList) {
+                if (userDTO.getEmail().equals(dto.getEmail())) {
+                    availableObj = dto;
                 }
             }
 
